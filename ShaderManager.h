@@ -1,0 +1,30 @@
+#ifndef SHADER_MANAGER_H
+#define SHADER_MANAGER_H
+
+#include "Core.h"
+
+#include <string>
+
+class ShaderManager
+{
+public:
+	ShaderManager(std::string _vertexPath, std::string _fragmentPath);
+	void CreateProgram();
+
+	GLuint GetProgramId() { return programId; }
+	GLuint GetVertexShaderId() { return vertexId; }
+	GLuint GetFragmentShaderId() { return fragmentId; }
+
+private:
+	GLuint InitShader(GLenum _type, std::string _path);
+	std::string ReadFromFile(std::string _path);
+	bool CheckError(GLuint _shader);
+
+	GLuint programId;
+	GLuint vertexId;
+	GLuint fragmentId;
+
+	char infoLog[512];
+};
+
+#endif

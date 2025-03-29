@@ -1,0 +1,101 @@
+#ifndef OBJECT_H
+#define OBJECT_H
+
+#include <glm.hpp>
+#include <gtc/matrix_transform.hpp>
+
+#include "Mesh.h"
+#include "Material.h"
+#include "Camera.h"
+
+class Object
+{
+public:
+	Object(std::string _meshPath, std::shared_ptr<Material> _mat);
+	~Object();
+
+
+	glm::vec3 GetPosition() { return position; }
+    void SetPosition(glm::vec3 _position) { position = _position; }
+	std::shared_ptr<Material> GetMaterial() {
+		return material;
+	}
+
+	void CreateObject();
+	void DrawObject();
+
+    void RotateWorldMatrix(float _angle, float _x, float _y, float _z);
+    void MoveWorldMatrix(float _x, float _y, float _z);
+
+    glm::mat4 worldMatrix;
+    GLuint transformPos;
+
+private:
+	void CreateVertexBuffer();
+
+	GLuint vertexArray;
+	GLuint vertexBuffer;
+	GLuint elementBuffer;
+	const int strideMult = 5;
+
+    std::shared_ptr<Mesh> mesh;
+	std::shared_ptr<Material> material;
+
+    GLuint worldLoc;
+    GLuint viewLoc;
+    GLuint projLoc;
+
+    float vertices[180] = {
+    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+     0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+
+    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+    -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+    };
+
+    glm::vec3 position;
+
+	unsigned int indices[6] = {
+		0, 1, 3,
+		1, 2, 3
+	};
+};
+
+#endif
+
