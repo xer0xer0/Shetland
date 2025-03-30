@@ -10,44 +10,16 @@ Object::Object(std::string _meshPath, std::shared_ptr<Material> _mat)
 	position = glm::vec3(0.0f);
 	worldMatrix = glm::mat4(1.0f);
 	
-	mesh = std::make_shared<Mesh>(_meshPath);
+	model = std::make_shared<Model>(_meshPath);
 	CreateObject();
 }
 
 Object::~Object()
 {
-	glDeleteVertexArrays(1, &vertexArray);
-	glDeleteBuffers(1, &vertexBuffer);
-	//glDeleteBuffers(1, &elementBuffer);
-}
-
-void Object::CreateVertexBuffer()
-{
-	glGenVertexArrays(1, &vertexArray);
-	glGenBuffers(1, &vertexBuffer);
-	glGenBuffers(1, &elementBuffer);
-
-	glBindVertexArray(vertexArray);
-
-	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBuffer);
-	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-	// pos
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, strideMult * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
-
-	// texture coords
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, strideMult * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
 }
 
 void Object::CreateObject()
 {
-	// CreateVertexBuffer();
-
 	worldLoc = glGetUniformLocation(material->GetProgramId(), "world");
 	viewLoc = glGetUniformLocation(material->GetProgramId(), "view");
 	projLoc = glGetUniformLocation(material->GetProgramId(), "projection");
@@ -72,8 +44,9 @@ void Object::DrawObject()
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, material->GetTextureId());
 
-	glBindVertexArray(vertexArray);
-	glDrawArrays(GL_TRIANGLES, 0, 36);
+	glBindVertexArray(model->vertexArray);
+	glDrawElements(GL_TRIANGLES, model->indices.size(), GL_UNSIGNED_INT, 0);
 
 	worldMatrix = glm::mat4(1.0f);
+	
 }

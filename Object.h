@@ -4,7 +4,7 @@
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
 
-#include "Mesh.h"
+#include "Model.h"
 #include "Material.h"
 #include "Camera.h"
 
@@ -31,14 +31,8 @@ public:
     GLuint transformPos;
 
 private:
-	void CreateVertexBuffer();
 
-	GLuint vertexArray;
-	GLuint vertexBuffer;
-	GLuint elementBuffer;
-	const int strideMult = 5;
-
-    std::shared_ptr<Mesh> mesh;
+    std::shared_ptr<Model> model;
 	std::shared_ptr<Material> material;
 
     GLuint worldLoc;

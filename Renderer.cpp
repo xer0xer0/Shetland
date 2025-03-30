@@ -24,7 +24,7 @@ void Renderer::InitRenderer()
 {
 	std::string vertexShaderPath = "C:/Graphics Libs/Projects/Shetland/Shetland/Assets/Shaders/baseShader.vert";
 	std::string fragmentShaderPath = "C:/Graphics Libs/Projects/Shetland/Shetland/Assets/Shaders/baseShader.frag";
-	std::string modelPath = "C:/Graphics Libs/Projects/Shetland/Shetland/Assets/Models/cube.obj";
+	std::string modelPath = "C:/Graphics Libs/Projects/Shetland/Shetland/Assets/Models/viking_room.obj";
 	shaderProgram = std::make_shared<ShaderManager>(vertexShaderPath, fragmentShaderPath);
 	shaderProgram->CreateProgram();
 
@@ -45,7 +45,6 @@ void Renderer::InitMaterials()
 
 void Renderer::Draw()
 {
-	//float blue = (sin(glfwGetTime()) / 2.0f) + 0.5f;
 	glUseProgram(shaderProgram->GetProgramId());
 
 	mainObj->RotateWorldMatrix((float)glfwGetTime() * glm::radians(10.0f), 0.5f, 1.0f, 0.0f);
