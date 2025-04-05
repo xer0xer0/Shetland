@@ -10,6 +10,7 @@
 #include "ShaderManager.h"
 #include "Material.h"
 #include "Object.h"
+#include "Light.h"
 
 class Renderer
 {
@@ -26,6 +27,8 @@ private:
 
 	int windowWidth;
 	int windowHeight;
+
+	Light light1;
 
 	std::shared_ptr<Object> mainObj;
 	std::shared_ptr<Object> secondObj;

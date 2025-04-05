@@ -29,6 +29,7 @@ public:
 
 	glm::mat4 GetView() { return view; }
 	glm::mat4 GetProjection() { return projection; }
+	glm::vec3 GetPosition() { return position; }
 
 protected:
 	Camera();
@@ -37,8 +38,6 @@ protected:
 private:
 	void SetView();
 	void UpdateVectors();
-
-
 
 	const glm::vec3 worldSpaceUp = glm::vec3(0.0f, 1.0f, 0.0f);
 	const float speed = 0.05f;

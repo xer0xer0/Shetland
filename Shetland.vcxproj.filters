@@ -48,6 +48,9 @@
     <ClInclude Include="Model.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -71,12 +74,18 @@
     <ClCompile Include="Model.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Light.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shaders\baseShader.frag">
       <Filter>Shaders</Filter>
     </None>
     <None Include="Assets\Shaders\baseShader.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="utilityShader.frag">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

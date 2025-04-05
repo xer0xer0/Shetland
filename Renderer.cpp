@@ -24,13 +24,13 @@ void Renderer::InitRenderer()
 {
 	std::string vertexShaderPath = "C:/Graphics Libs/Projects/Shetland/Shetland/Assets/Shaders/baseShader.vert";
 	std::string fragmentShaderPath = "C:/Graphics Libs/Projects/Shetland/Shetland/Assets/Shaders/baseShader.frag";
-	std::string modelPath = "C:/Graphics Libs/Projects/Shetland/Shetland/Assets/Models/viking_room.obj";
+	std::string modelPath = "C:/Graphics Libs/Projects/Shetland/Shetland/Assets/Models/cube.obj";
 	shaderProgram = std::make_shared<ShaderManager>(vertexShaderPath, fragmentShaderPath);
 	shaderProgram->CreateProgram();
 
 	InitMaterials();
-	mainObj = std::make_shared<Object>(modelPath, cobbleMat);
-	secondObj = std::make_shared<Object>(modelPath, cobbleMat);
+	mainObj = std::make_shared<Object>(modelPath, cobbleMat, light1);
+	secondObj = std::make_shared<Object>(modelPath, cobbleMat, light1);
 	secondObj->SetPosition(glm::vec3(-1.0f, 0.5f, -1.0f));
 }
 
@@ -40,6 +40,9 @@ void Renderer::InitMaterials()
 	cobbleMat = std::make_shared<Material>(shaderProgram);
 	cobbleMat->GenerateTexture("C:/Graphics Libs/Projects/Shetland/Shetland/Assets/Materials/cobblestone_albedo.png");
 
+	light1.InitVao();
+	light1.SetPosition(glm::vec3(0.0f, 0.5f, 2.0f));
+	light1.SetColor(1.0f, 1.0f, 1.0f);
 }
 
 

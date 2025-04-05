@@ -148,5 +148,5 @@ void Model::CreateVertexBuffer(Mesh _mesh)
 
     // texture coords
     glEnableVertexAttribArray(2);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, texCoord));
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, texCoord));
 }

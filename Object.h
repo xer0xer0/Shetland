@@ -7,11 +7,12 @@
 #include "Model.h"
 #include "Material.h"
 #include "Camera.h"
+#include "Light.h"
 
 class Object
 {
 public:
-	Object(std::string _meshPath, std::shared_ptr<Material> _mat);
+	Object(std::string _meshPath, std::shared_ptr<Material> _mat, Light _light);
 	~Object();
 
 
@@ -34,10 +35,14 @@ private:
 
     std::shared_ptr<Model> model;
 	std::shared_ptr<Material> material;
+    Light light;
 
     GLuint worldLoc;
     GLuint viewLoc;
     GLuint projLoc;
+    GLuint lightColorLoc;
+    GLuint lightPosLoc;
+    GLuint viewPosLoc;
 
     float vertices[180] = {
     -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
