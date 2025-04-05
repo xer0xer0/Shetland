@@ -42,7 +42,9 @@ void Renderer::InitMaterials()
 
 	light1.InitVao();
 	light1.SetPosition(glm::vec3(0.0f, 0.5f, 2.0f));
-	light1.SetColor(1.0f, 1.0f, 1.0f);
+	light1.SetAmbientColor(glm::vec3(0.2f, 0.2f, 0.2f));
+	light1.SetDiffuseColor(glm::vec3(0.5f, 0.5f, 0.5f));
+	light1.SetSpecularColor(glm::vec3(1.0f, 1.0f, 1.0f));
 }
 
 

@@ -85,8 +85,5 @@
     <None Include="Assets\Shaders\baseShader.vert">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="utilityShader.frag">
-      <Filter>Shaders</Filter>
-    </None>
   </ItemGroup>
 </Project>

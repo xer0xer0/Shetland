@@ -40,9 +40,10 @@ private:
     GLuint worldLoc;
     GLuint viewLoc;
     GLuint projLoc;
-    GLuint lightColorLoc;
-    GLuint lightPosLoc;
     GLuint viewPosLoc;
+
+    LightLocations lightLocs;
+    MatLocations matLocs;
 
     float vertices[180] = {
     -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,

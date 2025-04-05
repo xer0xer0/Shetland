@@ -5,6 +5,13 @@
 
 #include "ShaderManager.h"
 
+struct MatLocations
+{
+	GLuint diffuseLoc;
+	GLuint specularLoc;
+	GLuint shininessLoc;
+};
+
 class Material
 {
 public:

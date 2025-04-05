@@ -19,7 +19,7 @@ bool ShaderManager::CheckError(GLuint _shader)
 	if (!success)
 	{
 		glGetShaderInfoLog(_shader, 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+		std::cout << "ERROR::SHADER::COMPILATION_FAILED\n" << infoLog << std::endl;
 		return false;
 	}
 
