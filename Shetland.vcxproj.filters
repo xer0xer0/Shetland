@@ -16,6 +16,9 @@
     <Filter Include="Shaders">
       <UniqueIdentifier>{a19ace8a-d075-4a5a-a30d-6f895d1e54d7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DearImGui">
+      <UniqueIdentifier>{717c2b3c-bccd-45de-91a2-5799c037657f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Main.h">
@@ -51,6 +54,33 @@
     <ClInclude Include="Light.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Assets\Includes\DearImGui\imconfig.h">
+      <Filter>DearImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Assets\Includes\DearImGui\imgui.h">
+      <Filter>DearImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Assets\Includes\DearImGui\imgui_internal.h">
+      <Filter>DearImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Assets\Includes\DearImGui\imstb_rectpack.h">
+      <Filter>DearImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Assets\Includes\DearImGui\imstb_textedit.h">
+      <Filter>DearImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Assets\Includes\DearImGui\imstb_truetype.h">
+      <Filter>DearImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Assets\Includes\DearImGui\imgui_impl_glfw.h">
+      <Filter>DearImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Assets\Includes\DearImGui\imgui_impl_opengl3.h">
+      <Filter>DearImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Assets\Includes\DearImGui\imgui_impl_opengl3_loader.h">
+      <Filter>DearImGui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -77,6 +107,27 @@
     <ClCompile Include="Light.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Assets\Includes\DearImGui\imgui.cpp">
+      <Filter>DearImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Assets\Includes\DearImGui\imgui_demo.cpp">
+      <Filter>DearImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Assets\Includes\DearImGui\imgui_draw.cpp">
+      <Filter>DearImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Assets\Includes\DearImGui\imgui_tables.cpp">
+      <Filter>DearImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Assets\Includes\DearImGui\imgui_widgets.cpp">
+      <Filter>DearImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Assets\Includes\DearImGui\imgui_impl_glfw.cpp">
+      <Filter>DearImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Assets\Includes\DearImGui\imgui_impl_opengl3.cpp">
+      <Filter>DearImGui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shaders\baseShader.frag">
@@ -85,5 +136,10 @@
     <None Include="Assets\Shaders\baseShader.vert">
       <Filter>Shaders</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Assets\Includes\DearImGui\LICENSE.txt">
+      <Filter>DearImGui</Filter>
+    </Text>
   </ItemGroup>
 </Project>

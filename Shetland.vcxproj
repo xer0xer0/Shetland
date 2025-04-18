@@ -139,6 +139,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Assets\Includes\DearImGui\imconfig.h" />
+    <ClInclude Include="Assets\Includes\DearImGui\imgui.h" />
+    <ClInclude Include="Assets\Includes\DearImGui\imgui_impl_glfw.h" />
+    <ClInclude Include="Assets\Includes\DearImGui\imgui_impl_opengl3.h" />
+    <ClInclude Include="Assets\Includes\DearImGui\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="Assets\Includes\DearImGui\imgui_internal.h" />
+    <ClInclude Include="Assets\Includes\DearImGui\imstb_rectpack.h" />
+    <ClInclude Include="Assets\Includes\DearImGui\imstb_textedit.h" />
+    <ClInclude Include="Assets\Includes\DearImGui\imstb_truetype.h" />
     <ClInclude Include="Assets\Includes\stb_image.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Core.h" />
@@ -152,6 +161,13 @@
     <ClInclude Include="STB.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Assets\Includes\DearImGui\imgui.cpp" />
+    <ClCompile Include="Assets\Includes\DearImGui\imgui_demo.cpp" />
+    <ClCompile Include="Assets\Includes\DearImGui\imgui_draw.cpp" />
+    <ClCompile Include="Assets\Includes\DearImGui\imgui_impl_glfw.cpp" />
+    <ClCompile Include="Assets\Includes\DearImGui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="Assets\Includes\DearImGui\imgui_tables.cpp" />
+    <ClCompile Include="Assets\Includes\DearImGui\imgui_widgets.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -164,6 +180,9 @@
   <ItemGroup>
     <None Include="Assets\Shaders\baseShader.frag" />
     <None Include="Assets\Shaders\baseShader.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Assets\Includes\DearImGui\LICENSE.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

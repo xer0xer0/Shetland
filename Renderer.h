@@ -19,11 +19,13 @@ public:
 	~Renderer();
 	
 	void InitRenderer();
-	
+	void InitImGui(GLFWwindow* _window);
+
 	void Draw();
 
 private:
 	void InitMaterials();
+	void CreateGui();
 
 	int windowWidth;
 	int windowHeight;

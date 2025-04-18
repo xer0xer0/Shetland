@@ -1,5 +1,6 @@
 #include "Main.h"
 
+
 void MouseCallback(GLFWwindow* _window, double _mousePosX, double _mousePosY);
 
 Main::Main(int _windowWidth, int _windowHeight):
@@ -12,6 +13,7 @@ Main::Main(int _windowWidth, int _windowHeight):
 
 Main::~Main()
 {
+	glfwDestroyWindow(window);
 	glfwTerminate();
 }
 
@@ -49,6 +51,8 @@ bool Main::InitWindow()
 	glEnable(GL_DEPTH_TEST);
 	Camera::GetInstance().InitValues(windowWidth, windowHeight);
 	renderer->InitRenderer();
+	renderer->InitImGui(window);
+
 	return true;
 }
 
@@ -66,7 +70,7 @@ void Main::WaitForInput()
 	do
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+		
 		Camera::GetInstance().ProcessKeyboardInput(window);
 		renderer->Draw();
 

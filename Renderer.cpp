@@ -7,6 +7,10 @@
 #include <gtc/matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
 
+#include "Assets/Includes/DearImGui/imgui.h"
+#include "Assets/Includes/DearImGui/imgui_impl_glfw.h"
+#include "Assets/Includes/DearImGui/imgui_impl_opengl3.h"
+
 Renderer::Renderer(int _windowWidth, int _windowHeight)
 	: windowWidth(_windowWidth),
 	windowHeight(_windowHeight),
@@ -17,7 +21,9 @@ Renderer::Renderer(int _windowWidth, int _windowHeight)
 
 Renderer::~Renderer()
 {
-	
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplGlfw_Shutdown();
+	ImGui::DestroyContext();
 }
 
 
@@ -35,6 +41,17 @@ void Renderer::InitRenderer()
 	secondObj->SetPosition(glm::vec3(-1.0f, 0.5f, -1.0f));
 }
 
+void Renderer::InitImGui(GLFWwindow* _window)
+{
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+	ImGui::StyleColorsDark();
+
+	ImGui_ImplGlfw_InitForOpenGL(_window, true);
+	ImGui_ImplOpenGL3_Init("#version 330");
+}
 
 void Renderer::InitMaterials()
 {
@@ -48,9 +65,20 @@ void Renderer::InitMaterials()
 	light1.SetSpecularColor(glm::vec3(1.0f, 1.0f, 1.0f));
 }
 
+void Renderer::CreateGui()
+{
+	ImGui::Begin("Test Window");
+	ImGui::Text("This is some text!");
+	ImGui::End();
+}
 
 void Renderer::Draw()
 {
+	ImGui_ImplOpenGL3_NewFrame();
+	ImGui_ImplGlfw_NewFrame();
+	ImGui::NewFrame();
+	CreateGui();
+
 	glUseProgram(shaderProgram->GetProgramId());
 
 	mainObj->RotateWorldMatrix((float)glfwGetTime() * glm::radians(10.0f), 0.5f, 1.0f, 0.0f);
@@ -60,4 +88,7 @@ void Renderer::Draw()
 	secondObj->RotateWorldMatrix((float)glfwGetTime() * glm::radians(10.0f), 0.5f, 1.0f, 0.0f);
 	secondObj->MoveWorldMatrix(secondObj->GetPosition().x, secondObj->GetPosition().y, secondObj->GetPosition().z);
 	secondObj->DrawObject();
+
+	ImGui::Render();
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
