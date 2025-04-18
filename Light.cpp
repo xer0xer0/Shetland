@@ -1,8 +1,8 @@
 #include "Light.h"
 
-Light::Light()
+Light::Light(LightTypes _type)
+	: type(_type)
 {
-	//color = glm::vec3(0);
 }
 
 Light::~Light()

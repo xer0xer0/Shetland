@@ -26,6 +26,7 @@ void Object::CreateObject()
 	projLoc = glGetUniformLocation(material->GetProgramId(), "projection");
 	viewPosLoc = glGetUniformLocation(material->GetProgramId(), "viewPos");
 
+	lightLocs.typeLoc = glGetUniformLocation(material->GetProgramId(), "light.type");
 	lightLocs.positionLoc = glGetUniformLocation(material->GetProgramId(), "light.position");
 	lightLocs.ambientLoc = glGetUniformLocation(material->GetProgramId(), "light.ambient");
 	lightLocs.diffuseLoc = glGetUniformLocation(material->GetProgramId(), "light.diffuse");
@@ -53,6 +54,7 @@ void Object::DrawObject()
 	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(Camera::GetInstance().GetProjection()));
 	glUniform3f(viewPosLoc, Camera::GetInstance().GetPosition().x, Camera::GetInstance().GetPosition().y, Camera::GetInstance().GetPosition().z);
 
+	glUniform1i(lightLocs.typeLoc, light.GetLightType());
 	glUniform3f(lightLocs.positionLoc, light.GetPosition().x, light.GetPosition().y, light.GetPosition().z);
 	glUniform3f(lightLocs.ambientLoc, light.GetAmbientColor().r, light.GetAmbientColor().g, light.GetAmbientColor().b);
 	glUniform3f(lightLocs.diffuseLoc, light.GetDiffuseColor().r, light.GetDiffuseColor().g, light.GetDiffuseColor().b);

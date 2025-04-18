@@ -8,6 +8,7 @@ in vec3 FragPos;
 
 struct Light
 {
+    int type;
     vec3 position;
     vec3 ambient;
     vec3 diffuse;
@@ -54,6 +55,7 @@ void main()
     vec3 ambient = light.ambient * vec3(texture(material.diffuse, TexCoord));
 
     vec3 norm = normalize(Normal);
+
     vec3 lightDir = normalize(light.position - FragPos);
 
     vec3 diffuse = CalculateDiffuse(norm, lightDir);

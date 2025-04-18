@@ -9,7 +9,8 @@
 
 Renderer::Renderer(int _windowWidth, int _windowHeight)
 	: windowWidth(_windowWidth),
-	windowHeight(_windowHeight)
+	windowHeight(_windowHeight),
+	light1(POINT_LIGHT)
 {
 	std::cout << "init renderer" << std::endl;
 }
