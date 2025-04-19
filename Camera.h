@@ -26,7 +26,9 @@ public:
 	void InitValues(int _windowWidth, int _windowHeight);
 	void ProcessKeyboardInput(GLFWwindow* _window);
 	void ProcessMouseMovement(float _mousePosX, float _mousePosY);
+	void ProcessMouseInput(int _button, int _action);
 
+	bool ShouldMoveCamera() { return moveMouse; }
 	glm::mat4 GetView() { return view; }
 	glm::mat4 GetProjection() { return projection; }
 	glm::vec3 GetPosition() { return position; }
@@ -53,6 +55,7 @@ private:
 	float pitch; // y-axis
 	float yaw; // x-axis;
 
+	bool moveMouse;
 	bool mouseReceived;
 	float lastMousePosX;
 	float lastMousePosY;

@@ -1,7 +1,8 @@
 #include "Main.h"
 
-
-void MouseCallback(GLFWwindow* _window, double _mousePosX, double _mousePosY);
+void ResizeCallback(GLFWwindow* _window, int _width, int _height);
+void MouseMoveCallback(GLFWwindow* _window, double _mousePosX, double _mousePosY);
+void MousePressCallback(GLFWwindow* _window, int _button, int _action, int _mods);
 
 Main::Main(int _windowWidth, int _windowHeight):
 	windowWidth(_windowWidth),
@@ -39,7 +40,9 @@ bool Main::InitWindow()
 	}
 
 	glfwMakeContextCurrent(window);
-	glfwSetCursorPosCallback(window, MouseCallback);
+	glfwSetFramebufferSizeCallback(window, ResizeCallback);
+	glfwSetCursorPosCallback(window, MouseMoveCallback);
+	glfwSetMouseButtonCallback(window, MousePressCallback);
 	
 	glewExperimental = true;
 	if (glewInit() != GLEW_OK)
@@ -56,11 +59,24 @@ bool Main::InitWindow()
 	return true;
 }
 
-void MouseCallback(GLFWwindow* _window, double _mousePosX, double _mousePosY)
+void ResizeCallback(GLFWwindow* _window, int _width, int _height)
+{
+	glViewport(0, 0, _width, _height);
+}
+
+void MouseMoveCallback(GLFWwindow* _window, double _mousePosX, double _mousePosY)
 {
 	float x = static_cast<float>(_mousePosX);
 	float y = static_cast<float>(_mousePosY);
-	Camera::GetInstance().ProcessMouseMovement(x, y);
+	if (Camera::GetInstance().ShouldMoveCamera())
+	{
+			Camera::GetInstance().ProcessMouseMovement(x, y);
+	}
+}
+
+void MousePressCallback(GLFWwindow* _window, int _button, int _action, int _mods)
+{
+	Camera::GetInstance().ProcessMouseInput(_button, _action);
 }
 
 void Main::WaitForInput()

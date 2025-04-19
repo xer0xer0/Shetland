@@ -30,8 +30,9 @@ private:
 	int windowWidth;
 	int windowHeight;
 
-	Light light1;
+	std::shared_ptr<Light> light1;
 
+	std::vector<Object> objects;
 	std::shared_ptr<Object> mainObj;
 	std::shared_ptr<Object> secondObj;
 

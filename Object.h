@@ -12,7 +12,7 @@
 class Object
 {
 public:
-	Object(std::string _meshPath, std::shared_ptr<Material> _mat, Light _light);
+	Object(std::string _meshPath, std::shared_ptr<Material> _mat, std::shared_ptr<Light> _light);
 	~Object();
 
 
@@ -35,7 +35,7 @@ private:
 
     std::shared_ptr<Model> model;
 	std::shared_ptr<Material> material;
-    Light light;
+    std::shared_ptr<Light> light;
 
     GLuint worldLoc;
     GLuint viewLoc;

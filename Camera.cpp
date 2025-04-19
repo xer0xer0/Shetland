@@ -15,6 +15,7 @@ Camera::~Camera()
 
 void Camera::InitValues(int _windowWidth, int _windowHeight)
 {
+	moveMouse = false;
 	mouseReceived = false;
 	pitch = 0.0f;
 	yaw = -90.0f;
@@ -97,4 +98,19 @@ void Camera::ProcessMouseMovement(float _mousePosX, float _mousePosY)
 	}
 
 	UpdateVectors();
+}
+
+void Camera::ProcessMouseInput(int _button, int _action)
+{
+	if (_button == GLFW_MOUSE_BUTTON_RIGHT)
+	{
+		if (_action == GLFW_PRESS)
+		{
+			moveMouse = true;
+		}
+		else
+		{
+			moveMouse = false;
+		}
+	}
 }
