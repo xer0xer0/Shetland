@@ -12,7 +12,7 @@
 class Object
 {
 public:
-	Object(std::string _meshPath, std::shared_ptr<Material> _mat, std::shared_ptr<Light> _light);
+	Object(std::string _meshPath, std::shared_ptr<Material> _mat, std::vector<Light> _lights);
 	~Object();
 
 
@@ -35,14 +35,14 @@ private:
 
     std::shared_ptr<Model> model;
 	std::shared_ptr<Material> material;
-    std::shared_ptr<Light> light;
+    std::vector<Light> lights;
 
     GLuint worldLoc;
     GLuint viewLoc;
     GLuint projLoc;
     GLuint viewPosLoc;
 
-    LightLocations lightLocs;
+    
     MatLocations matLocs;
 
     float vertices[180] = {

@@ -4,9 +4,9 @@
 #include <gtc/type_ptr.hpp>
 #include "Camera.h"
 
-Object::Object(std::string _meshPath, std::shared_ptr<Material> _mat, std::shared_ptr<Light> _light)
+Object::Object(std::string _meshPath, std::shared_ptr<Material> _mat, std::vector<Light> _lights)
 	: material(_mat),
-	light(_light)
+	lights(_lights)
 {
 	position = glm::vec3(0.0f);
 	worldMatrix = glm::mat4(1.0f);
@@ -26,12 +26,6 @@ void Object::CreateObject()
 	projLoc = glGetUniformLocation(material->GetProgramId(), "projection");
 	viewPosLoc = glGetUniformLocation(material->GetProgramId(), "viewPos");
 
-	lightLocs.typeLoc = glGetUniformLocation(material->GetProgramId(), "light.type");
-	lightLocs.positionLoc = glGetUniformLocation(material->GetProgramId(), "light.position");
-	lightLocs.ambientLoc = glGetUniformLocation(material->GetProgramId(), "light.ambient");
-	lightLocs.diffuseLoc = glGetUniformLocation(material->GetProgramId(), "light.diffuse");
-	lightLocs.specularLoc = glGetUniformLocation(material->GetProgramId(), "light.specular");
-
 	matLocs.diffuseLoc = glGetUniformLocation(material->GetProgramId(), "material.diffuse");
 	matLocs.specularLoc = glGetUniformLocation(material->GetProgramId(), "material.specular");
 	matLocs.shininessLoc = glGetUniformLocation(material->GetProgramId(), "material.shininess");
@@ -50,15 +44,10 @@ void Object::MoveWorldMatrix(float _x, float _y, float _z)
 void Object::DrawObject()
 {
 	glUniformMatrix4fv(worldLoc, 1, GL_FALSE, glm::value_ptr(worldMatrix));
-	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(Camera::GetInstance().GetView()));
-	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(Camera::GetInstance().GetProjection()));
+	glUniformMatrix4fv(viewLoc,  1, GL_FALSE, glm::value_ptr(Camera::GetInstance().GetView()));
+	glUniformMatrix4fv(projLoc,  1, GL_FALSE, glm::value_ptr(Camera::GetInstance().GetProjection()));
 	glUniform3f(viewPosLoc, Camera::GetInstance().GetPosition().x, Camera::GetInstance().GetPosition().y, Camera::GetInstance().GetPosition().z);
 
-	glUniform1i(lightLocs.typeLoc, light->GetLightType());
-	glUniform3f(lightLocs.positionLoc, light->GetPosition().x, light->GetPosition().y, light->GetPosition().z);
-	glUniform3f(lightLocs.ambientLoc, light->GetAmbientColor().r, light->GetAmbientColor().g, light->GetAmbientColor().b);
-	glUniform3f(lightLocs.diffuseLoc, light->GetDiffuseColor().r, light->GetDiffuseColor().g, light->GetDiffuseColor().b);
-	glUniform3f(lightLocs.specularLoc, light->GetSpecularColor().r, light->GetSpecularColor().g, light->GetSpecularColor().b);
 
 	glUniform1i(matLocs.diffuseLoc, 0);
 	glUniform3f(matLocs.specularLoc, 0.5f, 0.5f, 0.5f);

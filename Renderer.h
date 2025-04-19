@@ -25,12 +25,14 @@ public:
 
 private:
 	void InitMaterials();
+	void InitLights();
 	void CreateGui();
 
 	int windowWidth;
 	int windowHeight;
 
-	std::shared_ptr<Light> light1;
+	std::vector<Light> lights;
+	std::vector<LightLocations> lightLocs;
 
 	std::vector<Object> objects;
 	std::shared_ptr<Object> mainObj;

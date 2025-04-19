@@ -15,7 +15,6 @@ Renderer::Renderer(int _windowWidth, int _windowHeight)
 	: windowWidth(_windowWidth),
 	windowHeight(_windowHeight)
 {
-	light1 = std::make_shared<Light>(POINT_LIGHT);
 	std::cout << "init renderer" << std::endl;
 }
 
@@ -36,9 +35,11 @@ void Renderer::InitRenderer()
 	shaderProgram->CreateProgram();
 
 	InitMaterials();
+	InitLights();
+	
 	objects = std::vector<Object>();
-	objects.push_back(Object(modelPath, cobbleMat, light1));
-	objects.push_back(Object(modelPath, cobbleMat, light1));
+	objects.push_back(Object(modelPath, cobbleMat, lights));
+	objects.push_back(Object(modelPath, cobbleMat, lights));
 
 	objects[1].SetPosition(glm::vec3(-1.0f, 0.5f, -1.0f));
 }
@@ -59,12 +60,39 @@ void Renderer::InitMaterials()
 {
 	cobbleMat = std::make_shared<Material>(shaderProgram);
 	cobbleMat->GenerateTexture("C:/Graphics Libs/Projects/Shetland/Shetland/Assets/Materials/cobblestone_albedo.png");
+}
 
-	light1->InitVao();
-	light1->SetPosition(glm::vec3(0.0f, 0.5f, 2.0f));
-	light1->SetAmbientColor(glm::vec3(0.2f, 0.2f, 0.2f));
-	light1->SetDiffuseColor(glm::vec3(0.5f, 0.5f, 0.5f));
-	light1->SetSpecularColor(glm::vec3(1.0f, 1.0f, 1.0f));
+void Renderer::InitLights()
+{
+	lights = std::vector<Light>();
+
+	lights.push_back(Light(POINT_LIGHT));
+	lights[0].InitVao();
+	lights[0].SetPosition(glm::vec3(0.0f, 0.5f, 2.0f));
+	lights[0].SetAmbientColor(glm::vec3(0.2f, 0.2f, 0.2f));
+	lights[0].SetDiffuseColor(glm::vec3(0.5f, 0.5f, 0.5f));
+	lights[0].SetSpecularColor(glm::vec3(1.0f, 1.0f, 1.0f));
+
+	lights.push_back(Light(POINT_LIGHT));
+	lights[1].InitVao();
+	lights[1].SetPosition(glm::vec3(-1.0f, 0.5f, 2.0f));
+	lights[1].SetAmbientColor(glm::vec3(0.2f, 0.2f, 0.2f));
+	lights[1].SetDiffuseColor(glm::vec3(0.5f, 0.5f, 0.5f));
+	lights[1].SetSpecularColor(glm::vec3(1.0f, 1.0f, 1.0f));
+
+	lightLocs = std::vector<LightLocations>();
+	std::string currentLight;
+	for (int i = 0; i < lights.size(); i++)
+	{
+		currentLight = "lights[" + std::to_string(i) + "]";
+		LightLocations loc;
+		loc.typeLoc = glGetUniformLocation(shaderProgram->GetProgramId(), (currentLight + ".type").c_str());
+		loc.positionLoc = glGetUniformLocation(shaderProgram->GetProgramId(), (currentLight + ".position").c_str());
+		loc.ambientLoc = glGetUniformLocation(shaderProgram->GetProgramId(), (currentLight + ".ambient").c_str());
+		loc.diffuseLoc = glGetUniformLocation(shaderProgram->GetProgramId(), (currentLight + ".diffuse").c_str());
+		loc.specularLoc = glGetUniformLocation(shaderProgram->GetProgramId(), (currentLight + ".specular").c_str());
+		lightLocs.push_back(loc);
+	}
 }
 
 void Renderer::CreateGui()
@@ -84,34 +112,41 @@ void Renderer::CreateGui()
 		{
 			objects[i].SetPosition(glm::vec3(objPos[0], objPos[1], objPos[2]));
 		}
+		ImGui::Text("");
 		ImGui::PopID();
 	}
 	ImGui::End();
 
 	// Lights
 	ImGui::Begin("Lights");
-	ImGui::PushID("light" + 1);
-	float lightPos[3] = { light1->GetPosition().x, light1->GetPosition().y, light1->GetPosition().z };
-	if (ImGui::DragFloat3("Position##", lightPos, 0.1f, -5.0f, 5.0f))
+	for (int i = 0; i < lights.size(); i++)
 	{
-		light1->SetPosition(glm::vec3(lightPos[0], lightPos[1], lightPos[2]));
+		ImGui::Text("Light %i Controls", i);
+		ImGui::PushID("light" + i);
+		float lightPos[3] = { lights[i].GetPosition().x, lights[i].GetPosition().y, lights[i].GetPosition().z};
+		if (ImGui::DragFloat3("Position##", lightPos, 0.1f, -5.0f, 5.0f))
+		{
+			lights[i].SetPosition(glm::vec3(lightPos[0], lightPos[1], lightPos[2]));
+		}
+		float lightAmbColor[3] = { lights[i].GetAmbientColor().r, lights[i].GetAmbientColor().g, lights[i].GetAmbientColor().b };
+		if (ImGui::DragFloat3("Ambient Color##", lightAmbColor, 0.05f, 0.0f, 1.0f))
+		{
+			lights[i].SetAmbientColor(glm::vec3(lightAmbColor[0], lightAmbColor[1], lightAmbColor[2]));
+		}
+		float lightDiffColor[3] = { lights[i].GetDiffuseColor().r, lights[i].GetDiffuseColor().g, lights[i].GetDiffuseColor().b };
+		if (ImGui::DragFloat3("Diffuse Color##", lightDiffColor, 0.05f, 0.0f, 1.0f))
+		{
+			lights[i].SetDiffuseColor(glm::vec3(lightDiffColor[0], lightDiffColor[1], lightDiffColor[2]));
+		}
+		float lightSpecColor[3] = { lights[i].GetSpecularColor().r, lights[i].GetSpecularColor().g, lights[i].GetSpecularColor().b };
+		if (ImGui::DragFloat3("Specular Color##", lightSpecColor, 0.05f, 0.0f, 1.0f))
+		{
+			lights[i].SetSpecularColor(glm::vec3(lightSpecColor[0], lightSpecColor[1], lightSpecColor[2]));
+		}
+		ImGui::Text("");
+		ImGui::PopID();
 	}
-	float lightAmbColor[3] = { light1->GetAmbientColor().r, light1->GetAmbientColor().g, light1->GetAmbientColor().b };
-	if (ImGui::DragFloat3("Ambient Color##", lightAmbColor, 0.05f, 0.0f, 1.0f))
-	{
-		light1->SetAmbientColor(glm::vec3(lightAmbColor[0], lightAmbColor[1], lightAmbColor[2]));
-	}
-	float lightDiffColor[3] = { light1->GetDiffuseColor().r, light1->GetDiffuseColor().g, light1->GetDiffuseColor().b };
-	if (ImGui::DragFloat3("Diffuse Color##", lightDiffColor, 0.05f, 0.0f, 1.0f))
-	{
-		light1->SetDiffuseColor(glm::vec3(lightDiffColor[0], lightDiffColor[1], lightDiffColor[2]));
-	}
-	float lightSpecColor[3] = { light1->GetSpecularColor().r, light1->GetSpecularColor().g, light1->GetSpecularColor().b };
-	if (ImGui::DragFloat3("Specular Color##", lightSpecColor, 0.05f, 0.0f, 1.0f))
-	{
-		light1->SetSpecularColor(glm::vec3(lightSpecColor[0], lightSpecColor[1], lightSpecColor[2]));
-	}
-	ImGui::PopID();
+	
 	ImGui::End();
 }
 
@@ -123,6 +158,15 @@ void Renderer::Draw()
 	CreateGui();
 
 	glUseProgram(shaderProgram->GetProgramId());
+
+	for (int i = 0; i < lights.size(); i++)
+	{
+		glUniform1i(lightLocs[i].typeLoc, lights[i].GetLightType());
+		glUniform3f(lightLocs[i].positionLoc, lights[i].GetPosition().x, lights[i].GetPosition().y, lights[i].GetPosition().z);
+		glUniform3f(lightLocs[i].ambientLoc, lights[i].GetAmbientColor().r, lights[i].GetAmbientColor().g, lights[i].GetAmbientColor().b);
+		glUniform3f(lightLocs[i].diffuseLoc, lights[i].GetDiffuseColor().r, lights[i].GetDiffuseColor().g, lights[i].GetDiffuseColor().b);
+		glUniform3f(lightLocs[i].specularLoc, lights[i].GetSpecularColor().r, lights[i].GetSpecularColor().g, lights[i].GetSpecularColor().b);
+	}
 
 	for (int i = 0; i < objects.size(); i++)
 	{
