@@ -12,7 +12,8 @@ struct Vertex
 {
 	glm::vec3 position;
 	glm::vec3 normal;
-	glm::vec2 texCoord;
+	glm::vec2 uv;
+	glm::vec3 tangent;
 };
 
 struct Texture
@@ -23,8 +24,6 @@ struct Texture
 
 struct Mesh
 {
-	
-
 	std::vector<Vertex> vertices;
 	std::vector<uint32_t> indices;
 	std::vector<Texture> textures;
@@ -54,10 +53,5 @@ private:
 	void CreateVertexBuffer(Mesh _mesh);
 
 	Assimp::Importer importer;
-	
-
-	//GLuint vertexArray;
-	//GLuint vertexBuffer;
-	//GLuint elementBuffer;
 };
 #endif

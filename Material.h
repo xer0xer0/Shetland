@@ -7,6 +7,8 @@
 
 struct MatLocations
 {
+	GLuint albedoLoc;
+	GLuint normalLoc;
 	GLuint diffuseLoc;
 	GLuint specularLoc;
 	GLuint shininessLoc;
@@ -19,13 +21,18 @@ public:
 	~Material();
 
 	GLuint GetProgramId() { return shaderProgram->GetProgramId(); }
-	GLuint GetTextureId() { return textureId; }
-	void GenerateTexture(std::string _path);
+	GLuint GetAlbedoTextureId() { return albedoTextureId; }
+	GLuint GetNormalMapId() { return normalMapId; }
+	void SetAlbedoTexture(std::string _path);
+	void SetNormalMap(std::string _path);
 
 private:
+	GLuint GenerateTexture(std::string _path);
+
 	std::shared_ptr<ShaderManager> shaderProgram;
 
-	GLuint textureId;
+	GLuint albedoTextureId;
+	GLuint normalMapId;
 	int imgWidth;
 	int imgHeight;
 };

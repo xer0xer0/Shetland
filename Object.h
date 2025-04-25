@@ -41,7 +41,6 @@ private:
     GLuint viewLoc;
     GLuint projLoc;
     GLuint viewPosLoc;
-
     
     MatLocations matLocs;
 

@@ -14,10 +14,21 @@ Material::~Material()
 
 }
 
-void Material::GenerateTexture(std::string _path)
+void Material::SetAlbedoTexture(std::string _path)
 {
-	glGenTextures(1, &textureId);
-	glBindTexture(GL_TEXTURE_2D, textureId);
+	albedoTextureId = GenerateTexture(_path);
+}
+
+void Material::SetNormalMap(std::string _path)
+{
+	normalMapId = GenerateTexture(_path);
+}
+
+GLuint Material::GenerateTexture(std::string _path)
+{
+	GLuint id;
+	glGenTextures(1, &id);
+	glBindTexture(GL_TEXTURE_2D, id);
 
 	// set options
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -38,4 +49,6 @@ void Material::GenerateTexture(std::string _path)
 	}
 
 	stbi_image_free(imgData);
+
+	return id;
 }

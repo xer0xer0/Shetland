@@ -28,7 +28,7 @@ Model::~Model()
 
 bool Model::LoadMesh(std::string _path)
 {     
-    const aiScene* scene = importer.ReadFile(_path, aiProcess_Triangulate | aiProcess_FlipUVs);
+    const aiScene* scene = importer.ReadFile(_path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
     
     if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
     {
@@ -78,6 +78,11 @@ Mesh Model::ProcessMesh(aiMesh* _mesh, const aiScene* _scene)
             vector3.y = _mesh->mNormals[i].y;
             vector3.z = _mesh->mNormals[i].z;
             vert.normal = vector3;
+
+            vector3.x = _mesh->mTangents[i].x;
+            vector3.y = _mesh->mTangents[i].y;
+            vector3.z = _mesh->mTangents[i].z;
+            vert.tangent = vector3;
         }
 
         if (_mesh->mTextureCoords[0])
@@ -85,25 +90,14 @@ Mesh Model::ProcessMesh(aiMesh* _mesh, const aiScene* _scene)
             glm::vec2 vector2;
             vector2.x = _mesh->mTextureCoords[0][i].x;
             vector2.y = _mesh->mTextureCoords[0][i].y;
-            vert.texCoord = vector2;
-
-           /* vector3.x = _mesh->mTangents[i].x;
-            vector3.y = _mesh->mTangents[i].y;
-            vector3.z = _mesh->mTangents[i].z;
-            vert.tangent = vector3;
-
-            vector3.x = _mesh->mBitangents[i].x;
-            vector3.y = _mesh->mBitangents[i].y;
-            vector3.z = _mesh->mBitangents[i].z;
-            vert.bitangent = vector3;*/
+            vert.uv = vector2;
         }
         else
         {
-            vert.texCoord = glm::vec2(0.0f, 0.0f);
+            vert.uv = glm::vec2(0.0f, 0.0f);
         }
 
         vertices.push_back(vert);
-       // processedMesh.vertices.push_back(vert);
     }
 
     // Get faces
@@ -148,5 +142,9 @@ void Model::CreateVertexBuffer(Mesh _mesh)
 
     // texture coords
     glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, texCoord));
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, uv));
+
+    // tangents
+    glEnableVertexAttribArray(3);
+    glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, tangent));
 }

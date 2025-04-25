@@ -5,9 +5,9 @@
 
 out vec4 FragColor;
   
-in vec2 TexCoord;
-in vec3 Normal;
+in vec2 UV;
 in vec3 FragPos;
+in mat3 TBN;
 
 struct Light
 {
@@ -26,7 +26,8 @@ struct Material
 };
 
 uniform vec3 viewPos;
-uniform sampler2D cobble;
+uniform sampler2D albedoTex;
+uniform sampler2D normalMap;
 uniform Light lights[NUM_LIGHTS];
 uniform Material material;
 
@@ -35,7 +36,7 @@ vec3 CalculateDiffuse(vec3 _norm, vec3 _lightDir, vec3 _lightDiff)
 {
     // the greater the angle btwn the vectors, the darker the diffuse
     float diffCoeff = max(dot(_norm, _lightDir), 0.0);
-    vec3 diffuse = diffCoeff * vec3(texture(material.diffuse, TexCoord));
+    vec3 diffuse = diffCoeff * vec3(texture(material.diffuse, UV));
     diffuse = diffuse * _lightDiff;
 
     return diffuse;
@@ -61,11 +62,13 @@ void main()
     {
         if(lights[i].type == 0)
         {
-            vec3 ambient = lights[i].ambient * vec3(texture(material.diffuse, TexCoord));
+            vec3 ambient = lights[i].ambient * vec3(texture(material.diffuse, UV));
 
-            vec3 norm = normalize(Normal);
+            vec3 norm = texture(normalMap, UV).rgb;
+            norm = normalize(norm * 2.0 - 1.0f);
 
             vec3 lightDir = normalize(lights[i].position - FragPos);
+            lightDir = TBN * lightDir;
 
             vec3 diffuse = CalculateDiffuse(norm, lightDir, lights[i].diffuse);
             vec3 specular = CalculateSpecular(norm, lightDir, lights[i].specular);
@@ -75,5 +78,5 @@ void main()
 
     }
 
-    FragColor =  texture(cobble, TexCoord) * vec4(total, 1.0);
+    FragColor =  texture(albedoTex, UV) * vec4(total, 1.0);
 }

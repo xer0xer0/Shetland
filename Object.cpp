@@ -26,6 +26,8 @@ void Object::CreateObject()
 	projLoc = glGetUniformLocation(material->GetProgramId(), "projection");
 	viewPosLoc = glGetUniformLocation(material->GetProgramId(), "viewPos");
 
+	matLocs.albedoLoc = glGetUniformLocation(material->GetProgramId(), "albedoTex");
+	matLocs.normalLoc = glGetUniformLocation(material->GetProgramId(), "normalMap");
 	matLocs.diffuseLoc = glGetUniformLocation(material->GetProgramId(), "material.diffuse");
 	matLocs.specularLoc = glGetUniformLocation(material->GetProgramId(), "material.specular");
 	matLocs.shininessLoc = glGetUniformLocation(material->GetProgramId(), "material.shininess");
@@ -48,13 +50,17 @@ void Object::DrawObject()
 	glUniformMatrix4fv(projLoc,  1, GL_FALSE, glm::value_ptr(Camera::GetInstance().GetProjection()));
 	glUniform3f(viewPosLoc, Camera::GetInstance().GetPosition().x, Camera::GetInstance().GetPosition().y, Camera::GetInstance().GetPosition().z);
 
-
+	glUniform1i(matLocs.albedoLoc, 0);
+	glUniform1i(matLocs.normalLoc, 1);
 	glUniform1i(matLocs.diffuseLoc, 0);
 	glUniform3f(matLocs.specularLoc, 0.5f, 0.5f, 0.5f);
 	glUniform1f(matLocs.shininessLoc, 32.0f);
 
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, material->GetTextureId());
+	glBindTexture(GL_TEXTURE_2D, material->GetAlbedoTextureId());
+
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, material->GetNormalMapId());
 
 	glBindVertexArray(model->vertexArray);
 	glDrawElements(GL_TRIANGLES, model->indices.size(), GL_UNSIGNED_INT, 0);
