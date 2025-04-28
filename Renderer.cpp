@@ -59,17 +59,18 @@ void Renderer::InitImGui(GLFWwindow* _window)
 void Renderer::InitMaterials()
 {
 	cobbleMat = std::make_shared<Material>(shaderProgram);
-	cobbleMat->SetAlbedoTexture("C:/Graphics Libs/Projects/Shetland/Shetland/Assets/Materials/cobblestone_albedo.png");
-	cobbleMat->SetNormalMap("C:/Graphics Libs/Projects/Shetland/Shetland/Assets/Materials/cobblestone_normals.png");
+	cobbleMat->SetAlbedoTexture("Assets/Materials/cobblestone_albedo.png");
+	cobbleMat->SetNormalMap("Assets/Materials/cobblestone_normals.png");
 }
 
 void Renderer::InitLights()
 {
 	lights = std::vector<Light>();
 
-	lights.push_back(Light(POINT_LIGHT));
+	lights.push_back(Light(DIRECTIONAL_LIGHT));
 	lights[0].InitVao();
 	lights[0].SetPosition(glm::vec3(0.0f, 0.5f, 2.0f));
+	lights[0].SetDirection(glm::vec3(0.0f));
 	lights[0].SetAmbientColor(glm::vec3(0.2f, 0.2f, 0.2f));
 	lights[0].SetDiffuseColor(glm::vec3(0.5f, 0.5f, 0.5f));
 	lights[0].SetSpecularColor(glm::vec3(1.0f, 1.0f, 1.0f));
@@ -77,6 +78,7 @@ void Renderer::InitLights()
 	lights.push_back(Light(POINT_LIGHT));
 	lights[1].InitVao();
 	lights[1].SetPosition(glm::vec3(-1.0f, 0.5f, 2.0f));
+	lights[1].SetDirection(glm::vec3(0.0f));
 	lights[1].SetAmbientColor(glm::vec3(0.2f, 0.2f, 0.2f));
 	lights[1].SetDiffuseColor(glm::vec3(0.5f, 0.5f, 0.5f));
 	lights[1].SetSpecularColor(glm::vec3(1.0f, 1.0f, 1.0f));
@@ -88,6 +90,7 @@ void Renderer::InitLights()
 		currentLight = "lights[" + std::to_string(i) + "]";
 		LightLocations loc;
 		loc.typeLoc = glGetUniformLocation(shaderProgram->GetProgramId(), (currentLight + ".type").c_str());
+		loc.directionLoc = glGetUniformLocation(shaderProgram->GetProgramId(), (currentLight + ".direction").c_str());
 		loc.positionLoc = glGetUniformLocation(shaderProgram->GetProgramId(), (currentLight + ".position").c_str());
 		loc.ambientLoc = glGetUniformLocation(shaderProgram->GetProgramId(), (currentLight + ".ambient").c_str());
 		loc.diffuseLoc = glGetUniformLocation(shaderProgram->GetProgramId(), (currentLight + ".diffuse").c_str());
@@ -129,6 +132,11 @@ void Renderer::CreateGui()
 		{
 			lights[i].SetPosition(glm::vec3(lightPos[0], lightPos[1], lightPos[2]));
 		}
+		float lightDir[3] = { lights[i].GetDirection().x, lights[i].GetDirection().y, lights[i].GetDirection().z };
+		if (ImGui::DragFloat3("Direction##", lightDir, 0.1f, -1.0f, 1.0f))
+		{
+			lights[i].SetDirection(glm::vec3(lightDir[0], lightDir[1], lightDir[2]));
+		}
 		float lightAmbColor[3] = { lights[i].GetAmbientColor().r, lights[i].GetAmbientColor().g, lights[i].GetAmbientColor().b };
 		if (ImGui::DragFloat3("Ambient Color##", lightAmbColor, 0.05f, 0.0f, 1.0f))
 		{
@@ -164,6 +172,7 @@ void Renderer::Draw()
 	{
 		glUniform1i(lightLocs[i].typeLoc, lights[i].GetLightType());
 		glUniform3f(lightLocs[i].positionLoc, lights[i].GetPosition().x, lights[i].GetPosition().y, lights[i].GetPosition().z);
+		glUniform3f(lightLocs[i].directionLoc, lights[i].GetDirection().x, lights[i].GetDirection().y, lights[i].GetDirection().z);
 		glUniform3f(lightLocs[i].ambientLoc, lights[i].GetAmbientColor().r, lights[i].GetAmbientColor().g, lights[i].GetAmbientColor().b);
 		glUniform3f(lightLocs[i].diffuseLoc, lights[i].GetDiffuseColor().r, lights[i].GetDiffuseColor().g, lights[i].GetDiffuseColor().b);
 		glUniform3f(lightLocs[i].specularLoc, lights[i].GetSpecularColor().r, lights[i].GetSpecularColor().g, lights[i].GetSpecularColor().b);

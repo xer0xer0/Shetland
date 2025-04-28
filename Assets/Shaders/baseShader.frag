@@ -1,6 +1,10 @@
 
 #version 330 core
 
+#define LIGHT_TYPE_POINT 0
+#define LIGHT_TYPE_DIRECTIONAL 1
+#define LIGHT_TYPE_SPOT 2
+
 #define NUM_LIGHTS 2
 
 out vec4 FragColor;
@@ -12,6 +16,7 @@ in mat3 TBN;
 struct Light
 {
     int type;
+    vec3 direction;
     vec3 position;
     vec3 ambient;
     vec3 diffuse;
@@ -57,24 +62,32 @@ vec3 CalculateSpecular(vec3 _norm, vec3 _lightDir, vec3 _lightSpec)
 void main()
 {
     vec3 total;
+    vec3 lightDir;
 
     for(int i = 0; i < NUM_LIGHTS; i++)
     {
-        if(lights[i].type == 0)
+        vec3 ambient = lights[i].ambient * vec3(texture(material.diffuse, UV));
+
+        vec3 norm = texture(normalMap, UV).rgb;
+        norm = normalize(norm * 2.0 - 1.0f);
+
+        if(lights[i].type == LIGHT_TYPE_POINT)
         {
-            vec3 ambient = lights[i].ambient * vec3(texture(material.diffuse, UV));
-
-            vec3 norm = texture(normalMap, UV).rgb;
-            norm = normalize(norm * 2.0 - 1.0f);
-
-            vec3 lightDir = normalize(lights[i].position - FragPos);
-            lightDir = TBN * lightDir;
-
-            vec3 diffuse = CalculateDiffuse(norm, lightDir, lights[i].diffuse);
-            vec3 specular = CalculateSpecular(norm, lightDir, lights[i].specular);
-
-            total += ambient + diffuse + specular;
+            
+            lightDir = normalize(lights[i].position - FragPos);
+            
         }
+        else if(lights[i].type == LIGHT_TYPE_DIRECTIONAL)
+        {
+            lightDir = normalize(-lights[i].direction);
+        }
+
+        lightDir = TBN * lightDir;
+
+        vec3 diffuse = CalculateDiffuse(norm, lightDir, lights[i].diffuse);
+        vec3 specular = CalculateSpecular(norm, lightDir, lights[i].specular);
+
+        total += ambient + diffuse + specular;
 
     }
 

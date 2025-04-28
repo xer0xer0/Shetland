@@ -6,6 +6,7 @@ struct LightLocations
 {
 	GLuint typeLoc;
 	GLuint positionLoc;
+	GLuint directionLoc;
 	GLuint ambientLoc;
 	GLuint diffuseLoc;
 	GLuint specularLoc;
@@ -14,7 +15,8 @@ struct LightLocations
 enum LightTypes
 {
 	POINT_LIGHT,
-	DIRECTIONAL_LIGHT
+	DIRECTIONAL_LIGHT,
+	SPOT_LIGHT
 };
 
 class Light
@@ -25,6 +27,9 @@ public:
 
 	glm::vec3 GetPosition() { return position; }
 	void SetPosition(glm::vec3 _position) { position = _position; }
+
+	glm::vec3 GetDirection() { return direction; }
+	void SetDirection(glm::vec3 _direction) { direction = _direction; }
 
 	void InitVao();
 	void SetColor(float _r, float _g, float _b);
@@ -44,6 +49,7 @@ private:
 
 	int type;
 	glm::vec3 position;
+	glm::vec3 direction;
 	glm::vec3 ambientColor;
 	glm::vec3 diffuseColor;
 	glm::vec3 specularColor;
