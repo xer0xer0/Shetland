@@ -61,8 +61,6 @@ void Camera::ProcessKeyboardInput(GLFWwindow* _window)
 		position -= right * speed;
 	if (glfwGetKey(_window, GLFW_KEY_D) == GLFW_PRESS)
 		position += right * speed;
-	if (glfwGetKey(_window, GLFW_KEY_F12) == GLFW_PRESS)
-		std::cout << "Pressed" << std::endl;
 
 	SetView();
 }

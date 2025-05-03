@@ -59,8 +59,10 @@ void Renderer::InitImGui(GLFWwindow* _window)
 void Renderer::InitMaterials()
 {
 	cobbleMat = std::make_shared<Material>(shaderProgram);
-	cobbleMat->SetAlbedoTexture("Assets/Materials/cobblestone_albedo.png");
-	cobbleMat->SetNormalMap("Assets/Materials/cobblestone_normals.png");
+	cobbleMat->SetTexture("Assets/Materials/cobblestone_albedo.png", ALBEDO_MAT);
+	cobbleMat->SetTexture("Assets/Materials/cobblestone_normals.png", NORMAL_MAP);
+	cobbleMat->SetTexture("Assets/Materials/cobblestone_roughness.png", ROUGHNESS_MAP);
+	cobbleMat->SetTexture("Assets/Materials/cobblestone_metal.png", METALNESS_MAP);
 }
 
 void Renderer::InitLights()

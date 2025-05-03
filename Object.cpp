@@ -28,6 +28,8 @@ void Object::CreateObject()
 
 	matLocs.albedoLoc = glGetUniformLocation(material->GetProgramId(), "albedoTex");
 	matLocs.normalLoc = glGetUniformLocation(material->GetProgramId(), "normalMap");
+	matLocs.roughnessLoc = glGetUniformLocation(material->GetProgramId(), "roughnessMap");
+	matLocs.metalnessLoc = glGetUniformLocation(material->GetProgramId(), "metalnessMap");
 	matLocs.diffuseLoc = glGetUniformLocation(material->GetProgramId(), "material.diffuse");
 	matLocs.specularLoc = glGetUniformLocation(material->GetProgramId(), "material.specular");
 	matLocs.shininessLoc = glGetUniformLocation(material->GetProgramId(), "material.shininess");
@@ -52,6 +54,8 @@ void Object::DrawObject()
 
 	glUniform1i(matLocs.albedoLoc, 0);
 	glUniform1i(matLocs.normalLoc, 1);
+	glUniform1i(matLocs.roughnessLoc, 2);
+	glUniform1i(matLocs.metalnessLoc, 3);
 	glUniform1i(matLocs.diffuseLoc, 0);
 	glUniform3f(matLocs.specularLoc, 0.5f, 0.5f, 0.5f);
 	glUniform1f(matLocs.shininessLoc, 32.0f);
@@ -61,6 +65,12 @@ void Object::DrawObject()
 
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, material->GetNormalMapId());
+
+	glActiveTexture(GL_TEXTURE3);
+	glBindTexture(GL_TEXTURE_2D, material->GetRoughnessMapId());
+
+	glActiveTexture(GL_TEXTURE4);
+	glBindTexture(GL_TEXTURE_2D, material->GetMetalnessMapId());
 
 	glBindVertexArray(model->vertexArray);
 	glDrawElements(GL_TRIANGLES, model->indices.size(), GL_UNSIGNED_INT, 0);

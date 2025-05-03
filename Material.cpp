@@ -14,17 +14,26 @@ Material::~Material()
 
 }
 
-void Material::SetAlbedoTexture(std::string _path)
+void Material::SetTexture(std::string _path, TextureTypes _type)
 {
-	albedoTextureId = GenerateTexture(_path);
+	switch (_type)
+	{
+		case ALBEDO_MAT:
+			albedoTextureId = GenerateTexture(_path, GL_RGB);
+			break;
+		case NORMAL_MAP:
+			normalMapId = GenerateTexture(_path, GL_RGB);
+			break;
+		case ROUGHNESS_MAP:
+			roughnessMapId = GenerateTexture(_path, GL_R);
+			break;
+		case METALNESS_MAP:
+			metalnessMapId = GenerateTexture(_path, GL_R);
+			break;
+	}
 }
 
-void Material::SetNormalMap(std::string _path)
-{
-	normalMapId = GenerateTexture(_path);
-}
-
-GLuint Material::GenerateTexture(std::string _path)
+GLuint Material::GenerateTexture(std::string _path, GLenum _colorFormat)
 {
 	GLuint id;
 	glGenTextures(1, &id);
@@ -40,12 +49,13 @@ GLuint Material::GenerateTexture(std::string _path)
 	unsigned char* imgData = stbi_load(_path.c_str(), &imgWidth, &imgHeight, &numColorChannels, 0);
 	if (imgData)
 	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imgWidth, imgHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, imgData);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imgWidth, imgHeight, 0, _colorFormat, GL_UNSIGNED_BYTE, imgData);
 		glGenerateMipmap(GL_TEXTURE_2D);
+		std::cout << "Loaded texture at " << _path << std::endl;
 	}
 	else
 	{
-		std::cout << "Failed to load texture" << std::endl;
+		std::cout << "Failed to load texture at " << _path << std::endl;
 	}
 
 	stbi_image_free(imgData);
