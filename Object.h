@@ -38,9 +38,10 @@ private:
     std::vector<Light> lights;
 
     GLuint worldLoc;
+    GLuint worldInvTransPos;
     GLuint viewLoc;
     GLuint projLoc;
-    GLuint viewPosLoc;
+    GLuint cameraPosLoc;
     
     MatLocations matLocs;
 

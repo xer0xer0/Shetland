@@ -7,7 +7,7 @@ struct LightLocations
 	GLuint typeLoc;
 	GLuint positionLoc;
 	GLuint directionLoc;
-	GLuint ambientLoc;
+	GLuint colorLoc;
 	GLuint diffuseLoc;
 	GLuint specularLoc;
 };
@@ -32,17 +32,12 @@ public:
 	void SetDirection(glm::vec3 _direction) { direction = _direction; }
 
 	void InitVao();
+	void SetColor(glm::vec3 _color) { color = _color; }
 	void SetColor(float _r, float _g, float _b);
 
 	GLuint GetLightVao() { return vao; }
 	int GetLightType() { return type; }
-	glm::vec3 GetAmbientColor() { return ambientColor; }
-	glm::vec3 GetDiffuseColor() { return diffuseColor; }
-	glm::vec3 GetSpecularColor() { return specularColor; }
-
-	void SetAmbientColor(glm::vec3 _color) { ambientColor = _color; }
-	void SetDiffuseColor(glm::vec3 _color) { diffuseColor = _color; }
-	void SetSpecularColor(glm::vec3 _color) { specularColor = _color; }
+	glm::vec3 GetColor() { return color; }
 	
 private:
 	GLuint vao;
@@ -50,8 +45,6 @@ private:
 	int type;
 	glm::vec3 position;
 	glm::vec3 direction;
-	glm::vec3 ambientColor;
-	glm::vec3 diffuseColor;
-	glm::vec3 specularColor;
+	glm::vec3 color;
 };
 

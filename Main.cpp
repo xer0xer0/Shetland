@@ -56,6 +56,7 @@ bool Main::InitWindow()
 	renderer->InitRenderer();
 	renderer->InitImGui(window);
 
+	glClearColor(0.2, 0.5, 0.2, 1);
 	return true;
 }
 

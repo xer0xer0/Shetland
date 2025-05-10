@@ -25,10 +25,10 @@ void Material::SetTexture(std::string _path, TextureTypes _type)
 			normalMapId = GenerateTexture(_path, GL_RGB);
 			break;
 		case ROUGHNESS_MAP:
-			roughnessMapId = GenerateTexture(_path, GL_R);
+			roughnessMapId = GenerateTexture(_path, GL_RED);
 			break;
 		case METALNESS_MAP:
-			metalnessMapId = GenerateTexture(_path, GL_R);
+			metalnessMapId = GenerateTexture(_path, GL_RED);
 			break;
 	}
 }
@@ -49,8 +49,11 @@ GLuint Material::GenerateTexture(std::string _path, GLenum _colorFormat)
 	unsigned char* imgData = stbi_load(_path.c_str(), &imgWidth, &imgHeight, &numColorChannels, 0);
 	if (imgData)
 	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imgWidth, imgHeight, 0, _colorFormat, GL_UNSIGNED_BYTE, imgData);
+
+		glTexImage2D(GL_TEXTURE_2D, 0, _colorFormat, imgWidth, imgHeight, 0, _colorFormat, GL_UNSIGNED_BYTE, imgData);
 		glGenerateMipmap(GL_TEXTURE_2D);
+		
+
 		std::cout << "Loaded texture at " << _path << std::endl;
 	}
 	else

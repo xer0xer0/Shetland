@@ -10,17 +10,16 @@
 out vec4 FragColor;
   
 in vec2 UV;
-in vec3 FragPos;
-in mat3 TBN;
+in vec3 WorldPos;
+in vec3 Normal;
+in vec3 Tangent;
 
 struct Light
 {
     int type;
     vec3 direction;
     vec3 position;
-    vec3 ambient;
-    vec3 diffuse;
-    vec3 specular;
+    vec3 color;
 };
 
 struct Material
@@ -30,37 +29,88 @@ struct Material
     float shininess;
 };
 
-uniform vec3 viewPos;
-uniform sampler2D albedoTex;
+uniform vec3 cameraPos;
+uniform sampler2D albedoTex; // fix discrepancy between Material struct and these
 uniform sampler2D normalMap;
 uniform sampler2D roughnessMap;
 uniform sampler2D metalnessMap;
 uniform Light lights[NUM_LIGHTS];
-uniform Material material;
 
+// assume surface reflection const is 0.04
 const float NON_METAL_COLOR = 0.04f;
+const float MIN_ROUGHNESS = 0.0000001f;
+const float PI = 3.14159265359f;
 
 
-vec3 CalculateDiffuse(vec3 _norm, vec3 _lightDir, vec3 _lightDiff)
+vec3 NormalsFromMap(vec3 _normalTex)
 {
-    // the greater the angle btwn the vectors, the darker the diffuse
-    float diffCoeff = max(dot(_norm, _lightDir), 0.0);
-    vec3 diffuse = diffCoeff * vec3(texture(material.diffuse, UV));
-    diffuse = diffuse * _lightDiff;
+    vec3 tangentNormal = _normalTex * 2.0 - 1.0;
 
-    return diffuse;
+    vec3 N   = normalize(Normal);
+    vec3 T  = normalize(Tangent);
+    vec3 B  = cross(T, N);
+    mat3 TBN = mat3(T, B, N);
+
+    return normalize(TBN * tangentNormal);
 }
 
-vec3 CalculateSpecular(vec3 _norm, vec3 _lightDir, vec3 _lightSpec)
+float SpecDistribution(vec3 _n, vec3 _h, float _roughness)
 {
-    float specStrength = 0.5;
-    vec3 viewDir = normalize(viewPos - FragPos);
-    vec3 reflectDir = reflect(-_lightDir, _norm);
-    
-    float specCoeff = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
-    vec3 specular = (material.specular * specCoeff) * _lightSpec;
+    float a = _roughness * _roughness;
+    float a2 = a * a;
+    float NDotH = max(dot(_n, _h), 0.0f);
+    float NDotH2 = NDotH * NDotH;
 
-    return specular;
+    float denom = NDotH2 * (a2 - 1) + 1;
+    denom = PI * (denom * denom);
+
+    return a2 / denom;
+}
+
+float GeometricShadowing(vec3 _n, vec3 _v, float _roughness)
+{
+    float r = _roughness + 1.0;
+    float k = (r * r) / 8.0;
+    float NDotV = max(dot(_n, _v), 0.0);
+    float denom = NDotV * (1.0 - k) + k;
+
+    return NDotV / denom;
+}
+
+float GeometrySmith(vec3 _n, vec3 _v, vec3 _l, float _roughness)
+{
+    float gs1 = GeometricShadowing(_n, _v, _roughness);
+    float gs2 = GeometricShadowing(_n, _l, _roughness);
+    
+    return gs1 * gs2;
+}
+
+vec3 FresnelSchlick(vec3 _v, vec3 _h, vec3 _specColor)
+{
+    float VDotH = max(dot(_h, _v), 0.0);
+
+    return _specColor + (1.0 - _specColor) * pow(clamp(1.0 - VDotH, 0.0, 1.0), 5.0);
+}
+
+// n - normal vector, v - vector to camera, l - vector to light
+vec3 CookTorrenceBRDF(vec3 _n, vec3 _v, vec3 _l, vec3 _h, float _roughness, vec3 _specColor)
+{
+    float D = SpecDistribution(_n, _h, _roughness);
+    vec3 F = FresnelSchlick(_n, _h, _specColor);
+    float G = GeometrySmith(_n, _v, _l, _roughness);
+
+    vec3 num = D * F * G;
+    float denom = 4.0 * max(dot(_n, _v), 0.0) * max(dot(_n, _l), 0.0) + 0.0001;
+
+    return num / denom;
+}
+
+float Attenuate(Light _light)
+{
+    float dist = length(_light.position - WorldPos);
+    float atten = 1.0 / (dist * dist);
+    // TODO: add range
+    return atten;
 }
 
 void main()
@@ -69,38 +119,56 @@ void main()
     vec3 lightDir;
 
     vec3 albedo = texture(albedoTex, UV).rgb;
-    vec3 normal = texture(normalMap, UV).rgb;
+    albedo = pow(albedo, vec3(2.2));
+    vec3 normalTex = texture(normalMap, UV).rgb;
     float roughness = texture(roughnessMap, UV).r;
     float metalness = texture(metalnessMap, UV).r;
 
-   // vec3 specColor = mix(NON_METAL_COLOR.rrr, albedo.rgb, metalness);
-    // Check this!!
-    normal =  normalize(normal * 2.0 - 1.0f);
+    vec3 nonMetal = vec3(NON_METAL_COLOR);
+    vec3 f0 = mix(nonMetal, albedo, metalness);
+
+    vec3 n = NormalsFromMap(normalTex);
+    vec3 v = normalize(cameraPos - WorldPos);
 
     for(int i = 0; i < NUM_LIGHTS; i++)
     {
-        vec3 ambient = lights[i].ambient * vec3(texture(material.diffuse, UV));
-
+        vec3 l;
+       // vec3 radiance = lights[i].diffuse * atten;
 
         if(lights[i].type == LIGHT_TYPE_POINT)
         {
             
-            lightDir = normalize(lights[i].position - FragPos);
+            l = normalize(lights[i].position - WorldPos);
             
         }
         else if(lights[i].type == LIGHT_TYPE_DIRECTIONAL)
         {
-            lightDir = normalize(-lights[i].direction);
+            l = normalize(-lights[i].direction);
         }
+        
+        vec3 h = normalize(v + l);
+        vec3 specular = CookTorrenceBRDF(n, v, l, h, roughness, f0);
+        vec3 diffuse = vec3(1.0) - FresnelSchlick(n, h, f0);
+        diffuse *= 1.0 - metalness;
+        float NDotL = max(dot(n, l), 0.0);
 
-        lightDir = TBN * lightDir;
-
-        vec3 diffuse = CalculateDiffuse(normal, lightDir, lights[i].diffuse);
-        vec3 specular = CalculateSpecular(normal, lightDir, lights[i].specular);
-
-        total += ambient + diffuse + specular;
-
+        if(lights[i].type == LIGHT_TYPE_POINT)
+        {
+            
+            total += (diffuse * albedo / PI + specular) * NDotL * lights[i].color * Attenuate(lights[i]);
+            
+        }
+        else if(lights[i].type == LIGHT_TYPE_DIRECTIONAL)
+        {
+            total += (diffuse * albedo / PI + specular) * lights[i].color * NDotL;
+        }
+        
     }
 
-    FragColor =  texture(albedoTex, UV) * vec4(total, 1.0);
+    vec3 ambient = vec3(0.03) * albedo;
+    vec3 color = ambient + total;
+    color = color / (color + vec3(1.0));
+
+    vec3 gamma = pow(total, vec3(1.0f / 2.2f));
+    FragColor = vec4(gamma, 1.0f);
 }

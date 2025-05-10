@@ -72,18 +72,14 @@ void Renderer::InitLights()
 	lights.push_back(Light(DIRECTIONAL_LIGHT));
 	lights[0].InitVao();
 	lights[0].SetPosition(glm::vec3(0.0f, 0.5f, 2.0f));
-	lights[0].SetDirection(glm::vec3(0.0f));
-	lights[0].SetAmbientColor(glm::vec3(0.2f, 0.2f, 0.2f));
-	lights[0].SetDiffuseColor(glm::vec3(0.5f, 0.5f, 0.5f));
-	lights[0].SetSpecularColor(glm::vec3(1.0f, 1.0f, 1.0f));
+	lights[0].SetDirection(glm::vec3(0.0f, 0.0f, -0.3f));
+	lights[0].SetColor(glm::vec3(0.2f, 0.2f, 0.2f));
 
 	lights.push_back(Light(POINT_LIGHT));
 	lights[1].InitVao();
 	lights[1].SetPosition(glm::vec3(-1.0f, 0.5f, 2.0f));
 	lights[1].SetDirection(glm::vec3(0.0f));
-	lights[1].SetAmbientColor(glm::vec3(0.2f, 0.2f, 0.2f));
-	lights[1].SetDiffuseColor(glm::vec3(0.5f, 0.5f, 0.5f));
-	lights[1].SetSpecularColor(glm::vec3(1.0f, 1.0f, 1.0f));
+	lights[1].SetColor(glm::vec3(0.2f, 0.2f, 0.2f));
 
 	lightLocs = std::vector<LightLocations>();
 	std::string currentLight;
@@ -94,9 +90,7 @@ void Renderer::InitLights()
 		loc.typeLoc = glGetUniformLocation(shaderProgram->GetProgramId(), (currentLight + ".type").c_str());
 		loc.directionLoc = glGetUniformLocation(shaderProgram->GetProgramId(), (currentLight + ".direction").c_str());
 		loc.positionLoc = glGetUniformLocation(shaderProgram->GetProgramId(), (currentLight + ".position").c_str());
-		loc.ambientLoc = glGetUniformLocation(shaderProgram->GetProgramId(), (currentLight + ".ambient").c_str());
-		loc.diffuseLoc = glGetUniformLocation(shaderProgram->GetProgramId(), (currentLight + ".diffuse").c_str());
-		loc.specularLoc = glGetUniformLocation(shaderProgram->GetProgramId(), (currentLight + ".specular").c_str());
+		loc.colorLoc = glGetUniformLocation(shaderProgram->GetProgramId(), (currentLight + ".color").c_str());
 		lightLocs.push_back(loc);
 	}
 }
@@ -139,20 +133,10 @@ void Renderer::CreateGui()
 		{
 			lights[i].SetDirection(glm::vec3(lightDir[0], lightDir[1], lightDir[2]));
 		}
-		float lightAmbColor[3] = { lights[i].GetAmbientColor().r, lights[i].GetAmbientColor().g, lights[i].GetAmbientColor().b };
-		if (ImGui::DragFloat3("Ambient Color##", lightAmbColor, 0.05f, 0.0f, 1.0f))
+		float lightAmbColor[3] = { lights[i].GetColor().r, lights[i].GetColor().g, lights[i].GetColor().b };
+		if (ImGui::DragFloat3("Color##", lightAmbColor, 0.05f, 0.0f, 1.0f))
 		{
-			lights[i].SetAmbientColor(glm::vec3(lightAmbColor[0], lightAmbColor[1], lightAmbColor[2]));
-		}
-		float lightDiffColor[3] = { lights[i].GetDiffuseColor().r, lights[i].GetDiffuseColor().g, lights[i].GetDiffuseColor().b };
-		if (ImGui::DragFloat3("Diffuse Color##", lightDiffColor, 0.05f, 0.0f, 1.0f))
-		{
-			lights[i].SetDiffuseColor(glm::vec3(lightDiffColor[0], lightDiffColor[1], lightDiffColor[2]));
-		}
-		float lightSpecColor[3] = { lights[i].GetSpecularColor().r, lights[i].GetSpecularColor().g, lights[i].GetSpecularColor().b };
-		if (ImGui::DragFloat3("Specular Color##", lightSpecColor, 0.05f, 0.0f, 1.0f))
-		{
-			lights[i].SetSpecularColor(glm::vec3(lightSpecColor[0], lightSpecColor[1], lightSpecColor[2]));
+			lights[i].SetColor(lightAmbColor[0], lightAmbColor[1], lightAmbColor[2]);
 		}
 		ImGui::Text("");
 		ImGui::PopID();
@@ -175,14 +159,12 @@ void Renderer::Draw()
 		glUniform1i(lightLocs[i].typeLoc, lights[i].GetLightType());
 		glUniform3f(lightLocs[i].positionLoc, lights[i].GetPosition().x, lights[i].GetPosition().y, lights[i].GetPosition().z);
 		glUniform3f(lightLocs[i].directionLoc, lights[i].GetDirection().x, lights[i].GetDirection().y, lights[i].GetDirection().z);
-		glUniform3f(lightLocs[i].ambientLoc, lights[i].GetAmbientColor().r, lights[i].GetAmbientColor().g, lights[i].GetAmbientColor().b);
-		glUniform3f(lightLocs[i].diffuseLoc, lights[i].GetDiffuseColor().r, lights[i].GetDiffuseColor().g, lights[i].GetDiffuseColor().b);
-		glUniform3f(lightLocs[i].specularLoc, lights[i].GetSpecularColor().r, lights[i].GetSpecularColor().g, lights[i].GetSpecularColor().b);
+		glUniform3f(lightLocs[i].colorLoc, lights[i].GetColor().r, lights[i].GetColor().g, lights[i].GetColor().b);
 	}
 
 	for (int i = 0; i < objects.size(); i++)
 	{
-		//objects[i].RotateWorldMatrix((float)glfwGetTime() * glm::radians(10.0f), 0.5f, 1.0f, 0.0f);
+		objects[i].RotateWorldMatrix((float)glfwGetTime() * glm::radians(10.0f), 0.5f, 1.0f, 0.0f);
 		objects[i].MoveWorldMatrix(objects[i].GetPosition().x, objects[i].GetPosition().y, objects[i].GetPosition().z);
 		objects[i].DrawObject();
 	}

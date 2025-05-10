@@ -22,9 +22,10 @@ Object::~Object()
 void Object::CreateObject()
 {
 	worldLoc = glGetUniformLocation(material->GetProgramId(), "world");
+	worldInvTransPos = glGetUniformLocation(material->GetProgramId(), "worldInvTranspose");
 	viewLoc = glGetUniformLocation(material->GetProgramId(), "view");
 	projLoc = glGetUniformLocation(material->GetProgramId(), "projection");
-	viewPosLoc = glGetUniformLocation(material->GetProgramId(), "viewPos");
+	cameraPosLoc = glGetUniformLocation(material->GetProgramId(), "cameraPos");
 
 	matLocs.albedoLoc = glGetUniformLocation(material->GetProgramId(), "albedoTex");
 	matLocs.normalLoc = glGetUniformLocation(material->GetProgramId(), "normalMap");
@@ -47,10 +48,12 @@ void Object::MoveWorldMatrix(float _x, float _y, float _z)
 
 void Object::DrawObject()
 {
+	glm::mat3 worldInvTrans = glm::transpose(glm::inverse(glm::mat3(worldMatrix)));
 	glUniformMatrix4fv(worldLoc, 1, GL_FALSE, glm::value_ptr(worldMatrix));
+	glUniformMatrix3fv(worldInvTransPos, 1, GL_FALSE, glm::value_ptr(worldInvTrans));
 	glUniformMatrix4fv(viewLoc,  1, GL_FALSE, glm::value_ptr(Camera::GetInstance().GetView()));
 	glUniformMatrix4fv(projLoc,  1, GL_FALSE, glm::value_ptr(Camera::GetInstance().GetProjection()));
-	glUniform3f(viewPosLoc, Camera::GetInstance().GetPosition().x, Camera::GetInstance().GetPosition().y, Camera::GetInstance().GetPosition().z);
+	glUniform3f(cameraPosLoc, Camera::GetInstance().GetPosition().x, Camera::GetInstance().GetPosition().y, Camera::GetInstance().GetPosition().z);
 
 	glUniform1i(matLocs.albedoLoc, 0);
 	glUniform1i(matLocs.normalLoc, 1);
@@ -66,15 +69,15 @@ void Object::DrawObject()
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, material->GetNormalMapId());
 
-	glActiveTexture(GL_TEXTURE3);
+	glActiveTexture(GL_TEXTURE2);
 	glBindTexture(GL_TEXTURE_2D, material->GetRoughnessMapId());
 
-	glActiveTexture(GL_TEXTURE4);
+	glActiveTexture(GL_TEXTURE3);
 	glBindTexture(GL_TEXTURE_2D, material->GetMetalnessMapId());
 
 	glBindVertexArray(model->vertexArray);
 	glDrawElements(GL_TRIANGLES, model->indices.size(), GL_UNSIGNED_INT, 0);
-
+	
 	worldMatrix = glm::mat4(1.0f);
 	
 }
