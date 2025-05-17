@@ -20,6 +20,8 @@ Renderer::Renderer(int _windowWidth, int _windowHeight)
 
 Renderer::~Renderer()
 {
+	glDeleteVertexArrays(1, &vertexArray);
+
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplGlfw_Shutdown();
 	ImGui::DestroyContext();
@@ -28,18 +30,27 @@ Renderer::~Renderer()
 
 void Renderer::InitRenderer()
 {
-	std::string vertexShaderPath = "C:/Graphics Libs/Projects/Shetland/Shetland/Assets/Shaders/baseShader.vert";
-	std::string fragmentShaderPath = "C:/Graphics Libs/Projects/Shetland/Shetland/Assets/Shaders/baseShader.frag";
-	std::string modelPath = "C:/Graphics Libs/Projects/Shetland/Shetland/Assets/Models/cube.obj";
+	CreateVao();
+
+	std::string vertexShaderPath = "Assets/Shaders/baseShader.vert";
+	std::string fragmentShaderPath = "Assets/Shaders/baseShader.frag";
 	shaderProgram = std::make_shared<ShaderManager>(vertexShaderPath, fragmentShaderPath);
-	shaderProgram->CreateProgram();
+
+	skyShaderProgram = std::make_shared<ShaderManager>("Assets/Shaders/skyShader.vert", "Assets/Shaders/skyShader.frag");
+
+	cubeModel = std::make_shared<Model>("Assets/Models/cube.obj", vertexArray);
+
+	sky = std::make_shared<Sky>(cubeModel, skyShaderProgram->GetProgramId(),
+		"Assets/Skyboxes/Clouds Blue/right.png", "Assets/Skyboxes/Clouds Blue/left.png",
+		"Assets/Skyboxes/Clouds Blue/up.png", "Assets/Skyboxes/Clouds Blue/down.png",
+		"Assets/Skyboxes/Clouds Blue/front.png", "Assets/Skyboxes/Clouds Blue/back.png");
 
 	InitMaterials();
 	InitLights();
 	
 	objects = std::vector<Object>();
-	objects.push_back(Object(modelPath, cobbleMat, lights));
-	objects.push_back(Object(modelPath, cobbleMat, lights));
+	objects.push_back(Object(cubeModel, cobbleMat, lights));
+	objects.push_back(Object(cubeModel, cobbleMat, lights));
 
 	objects[1].SetPosition(glm::vec3(-1.0f, 0.5f, -1.0f));
 }
@@ -145,6 +156,28 @@ void Renderer::CreateGui()
 	ImGui::End();
 }
 
+void Renderer::CreateVao()
+{
+	glGenVertexArrays(1, &vertexArray);
+	glBindVertexArray(vertexArray);
+
+	// positions
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+
+	// normals
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
+
+	// texture coords
+	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, uv));
+
+	// tangents
+	glEnableVertexAttribArray(3);
+	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, tangent));
+}
+
 void Renderer::Draw()
 {
 	ImGui_ImplOpenGL3_NewFrame();
@@ -152,8 +185,10 @@ void Renderer::Draw()
 	ImGui::NewFrame();
 	CreateGui();
 
-	glUseProgram(shaderProgram->GetProgramId());
+	glBindVertexArray(vertexArray);
 
+	glUseProgram(shaderProgram->GetProgramId());
+	
 	for (int i = 0; i < lights.size(); i++)
 	{
 		glUniform1i(lightLocs[i].typeLoc, lights[i].GetLightType());
@@ -168,6 +203,9 @@ void Renderer::Draw()
 		objects[i].MoveWorldMatrix(objects[i].GetPosition().x, objects[i].GetPosition().y, objects[i].GetPosition().z);
 		objects[i].DrawObject();
 	}
+
+	glUseProgram(skyShaderProgram->GetProgramId());
+	sky->Draw();
 
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

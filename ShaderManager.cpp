@@ -8,8 +8,7 @@
 
 ShaderManager::ShaderManager(std::string _vertexPath, std::string _fragmentPath)
 {
-	vertexId = InitShader(GL_VERTEX_SHADER, _vertexPath);
-	fragmentId = InitShader(GL_FRAGMENT_SHADER, _fragmentPath);
+	CreateProgram(_vertexPath, _fragmentPath);
 }
 
 bool ShaderManager::CheckError(GLuint _shader)
@@ -26,13 +25,13 @@ bool ShaderManager::CheckError(GLuint _shader)
 	return true;
 }
 
-void ShaderManager::CreateProgram()
+void ShaderManager::CreateProgram(std::string _vertexPath, std::string _fragmentPath)
 {
 	// Vertex shader
-	vertexId = InitShader(GL_VERTEX_SHADER, "C:/Graphics Libs/Projects/Shetland/Shetland/Assets/Shaders/baseShader.vert");
+	vertexId = InitShader(GL_VERTEX_SHADER, _vertexPath);
 
 	// Fragment shader
-	fragmentId = InitShader(GL_FRAGMENT_SHADER, "C:/Graphics Libs/Projects/Shetland/Shetland/Assets/Shaders/baseShader.frag");
+	fragmentId = InitShader(GL_FRAGMENT_SHADER, _fragmentPath);
 
 	// Shader program
 	programId = glCreateProgram();

@@ -32,13 +32,13 @@ struct Mesh
 class Model
 {
 public:
-	Model(std::string _path);
+	Model(std::string _path, GLuint _vertexArray);
 	~Model();
+	void CreateVertexBuffer(GLuint _vertexArray);
 
 	Mesh mesh;
 	std::vector<Mesh> meshes;
 
-	GLuint vertexArray;
 	GLuint vertexBuffer;
 	GLuint elementBuffer;
 
@@ -50,7 +50,6 @@ private:
 	bool LoadMesh(std::string _path);
 	void ProcessNode(aiNode* _node, const aiScene* _scene);
 	Mesh ProcessMesh(aiMesh* _mesh, const aiScene* _scene);
-	void CreateVertexBuffer(Mesh _mesh);
 
 	Assimp::Importer importer;
 };

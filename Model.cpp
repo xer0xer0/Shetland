@@ -4,11 +4,11 @@
 #include <map>
 #include <iostream>
 
-Model::Model(std::string _path)
+Model::Model(std::string _path, GLuint _vertexArray)
 {
     if (LoadMesh(_path))
     {
-        CreateVertexBuffer(mesh);
+        CreateVertexBuffer(_vertexArray);
     }
     else
     {
@@ -18,12 +18,8 @@ Model::Model(std::string _path)
 
 Model::~Model()
 {
-    for (int i = 0; i < meshes.size(); i++)
-    {
-        glDeleteVertexArrays(1, &vertexArray);
-        glDeleteBuffers(1, &vertexBuffer);
-        glDeleteBuffers(1, &elementBuffer);
-    }
+    glDeleteBuffers(1, &vertexBuffer);
+    glDeleteBuffers(1, &elementBuffer);
 }
 
 bool Model::LoadMesh(std::string _path)
@@ -117,13 +113,12 @@ Mesh Model::ProcessMesh(aiMesh* _mesh, const aiScene* _scene)
     return processedMesh;
 }
 
-void Model::CreateVertexBuffer(Mesh _mesh)
+void Model::CreateVertexBuffer(GLuint _vertexArray)
 {
-    glGenVertexArrays(1, &vertexArray);
     glGenBuffers(1, &vertexBuffer);
     glGenBuffers(1, &elementBuffer);
 
-    glBindVertexArray(vertexArray);
+    glBindVertexArray(_vertexArray);
 
     glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
     glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);

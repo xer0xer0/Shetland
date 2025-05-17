@@ -9,13 +9,13 @@ class ShaderManager
 {
 public:
 	ShaderManager(std::string _vertexPath, std::string _fragmentPath);
-	void CreateProgram();
 
 	GLuint GetProgramId() { return programId; }
 	GLuint GetVertexShaderId() { return vertexId; }
 	GLuint GetFragmentShaderId() { return fragmentId; }
 
 private:
+	void CreateProgram(std::string _vertexPath, std::string _fragmentPath);
 	GLuint InitShader(GLenum _type, std::string _path);
 	std::string ReadFromFile(std::string _path);
 	bool CheckError(GLuint _shader);

@@ -10,6 +10,7 @@
 #include "ShaderManager.h"
 #include "Material.h"
 #include "Object.h"
+#include "Sky.h"
 #include "Light.h"
 
 class Renderer
@@ -27,19 +28,25 @@ private:
 	void InitMaterials();
 	void InitLights();
 	void CreateGui();
+	void CreateVao();
 
 	int windowWidth;
 	int windowHeight;
 
+	GLuint vertexArray;
 	std::vector<Light> lights;
 	std::vector<LightLocations> lightLocs;
+
+	std::shared_ptr<Sky> sky;
 
 	std::vector<Object> objects;
 	std::shared_ptr<Object> mainObj;
 	std::shared_ptr<Object> secondObj;
 
 	std::shared_ptr<ShaderManager> shaderProgram;
+	std::shared_ptr<ShaderManager> skyShaderProgram;
 
+	std::shared_ptr<Model> cubeModel;
 	std::shared_ptr<Material> cobbleMat;
 
 	int vertColorPos;

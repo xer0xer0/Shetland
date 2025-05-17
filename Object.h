@@ -12,7 +12,7 @@
 class Object
 {
 public:
-	Object(std::string _meshPath, std::shared_ptr<Material> _mat, std::vector<Light> _lights);
+	Object(std::shared_ptr<Model> _model, std::shared_ptr<Material> _mat, std::vector<Light> _lights);
 	~Object();
 
 

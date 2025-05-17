@@ -4,14 +4,14 @@
 #include <gtc/type_ptr.hpp>
 #include "Camera.h"
 
-Object::Object(std::string _meshPath, std::shared_ptr<Material> _mat, std::vector<Light> _lights)
-	: material(_mat),
+Object::Object(std::shared_ptr<Model> _model, std::shared_ptr<Material> _mat, std::vector<Light> _lights)
+	: model(_model),
+	material(_mat),
 	lights(_lights)
 {
 	position = glm::vec3(0.0f);
 	worldMatrix = glm::mat4(1.0f);
-	
-	model = std::make_shared<Model>(_meshPath);
+
 	CreateObject();
 }
 
@@ -75,7 +75,6 @@ void Object::DrawObject()
 	glActiveTexture(GL_TEXTURE3);
 	glBindTexture(GL_TEXTURE_2D, material->GetMetalnessMapId());
 
-	glBindVertexArray(model->vertexArray);
 	glDrawElements(GL_TRIANGLES, model->indices.size(), GL_UNSIGNED_INT, 0);
 	
 	worldMatrix = glm::mat4(1.0f);

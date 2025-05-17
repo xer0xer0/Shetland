@@ -33,9 +33,6 @@
     <ClInclude Include="Material.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="STB.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Assets\Includes\stb_image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -82,6 +79,12 @@
       <Filter>DearImGui</Filter>
     </ClInclude>
     <ClInclude Include="Transform.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Sky.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="STB.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -134,12 +137,24 @@
     <ClCompile Include="Transform.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Sky.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="STB.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shaders\baseShader.frag">
       <Filter>Shaders</Filter>
     </None>
     <None Include="Assets\Shaders\baseShader.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Assets\Shaders\skyShader.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Assets\Shaders\skyShader.vert">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

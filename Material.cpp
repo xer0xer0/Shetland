@@ -1,5 +1,5 @@
 #include "Material.h"
-#include "STB.h"
+#include "Assets/Includes/stb_image.h"
 
 #include <iostream>
 
@@ -46,13 +46,13 @@ GLuint Material::GenerateTexture(std::string _path, GLenum _colorFormat)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 	int numColorChannels;
+	// unsigned char* imgData = stbi_load(_path.c_str(), &imgWidth, &imgHeight, &numColorChannels, 0);
 	unsigned char* imgData = stbi_load(_path.c_str(), &imgWidth, &imgHeight, &numColorChannels, 0);
 	if (imgData)
 	{
 
 		glTexImage2D(GL_TEXTURE_2D, 0, _colorFormat, imgWidth, imgHeight, 0, _colorFormat, GL_UNSIGNED_BYTE, imgData);
 		glGenerateMipmap(GL_TEXTURE_2D);
-		
 
 		std::cout << "Loaded texture at " << _path << std::endl;
 	}

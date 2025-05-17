@@ -158,6 +158,7 @@
     <ClInclude Include="Object.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="ShaderManager.h" />
+    <ClInclude Include="Sky.h" />
     <ClInclude Include="STB.h" />
     <ClInclude Include="Transform.h" />
   </ItemGroup>
@@ -177,11 +178,15 @@
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="ShaderManager.cpp" />
+    <ClCompile Include="Sky.cpp" />
+    <ClCompile Include="STB.cpp" />
     <ClCompile Include="Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shaders\baseShader.frag" />
     <None Include="Assets\Shaders\baseShader.vert" />
+    <None Include="Assets\Shaders\skyShader.frag" />
+    <None Include="Assets\Shaders\skyShader.vert" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Assets\Includes\DearImGui\LICENSE.txt" />
