@@ -37,10 +37,11 @@ void Renderer::InitRenderer()
 	shaderProgram = std::make_shared<ShaderManager>(vertexShaderPath, fragmentShaderPath);
 
 	skyShaderProgram = std::make_shared<ShaderManager>("Assets/Shaders/skyShader.vert", "Assets/Shaders/skyShader.frag");
+	irrMapShaderProgram = std::make_shared<ShaderManager>("Assets/Shaders/cubemap.vert", "Assets/Shaders/irradianceMap.frag");
 
 	cubeModel = std::make_shared<Model>("Assets/Models/cube.obj", vertexArray);
 
-	sky = std::make_shared<Sky>(cubeModel, skyShaderProgram->GetProgramId(),
+	sky = std::make_shared<Sky>(cubeModel, skyShaderProgram->GetProgramId(), irrMapShaderProgram->GetProgramId(),
 		"Assets/Skyboxes/Clouds Blue/right.png", "Assets/Skyboxes/Clouds Blue/left.png",
 		"Assets/Skyboxes/Clouds Blue/up.png", "Assets/Skyboxes/Clouds Blue/down.png",
 		"Assets/Skyboxes/Clouds Blue/front.png", "Assets/Skyboxes/Clouds Blue/back.png");
@@ -189,6 +190,9 @@ void Renderer::Draw()
 
 	glUseProgram(shaderProgram->GetProgramId());
 	
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, sky->GetIrradianceMapId());
+
 	for (int i = 0; i < lights.size(); i++)
 	{
 		glUniform1i(lightLocs[i].typeLoc, lights[i].GetLightType());

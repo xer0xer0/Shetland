@@ -55,24 +55,24 @@ void Object::DrawObject()
 	glUniformMatrix4fv(projLoc,  1, GL_FALSE, glm::value_ptr(Camera::GetInstance().GetProjection()));
 	glUniform3f(cameraPosLoc, Camera::GetInstance().GetPosition().x, Camera::GetInstance().GetPosition().y, Camera::GetInstance().GetPosition().z);
 
-	glUniform1i(matLocs.albedoLoc, 0);
-	glUniform1i(matLocs.normalLoc, 1);
-	glUniform1i(matLocs.roughnessLoc, 2);
-	glUniform1i(matLocs.metalnessLoc, 3);
+	glUniform1i(matLocs.albedoLoc, 1);
+	glUniform1i(matLocs.normalLoc, 2);
+	glUniform1i(matLocs.roughnessLoc, 3);
+	glUniform1i(matLocs.metalnessLoc, 4);
 	glUniform1i(matLocs.diffuseLoc, 0);
 	glUniform3f(matLocs.specularLoc, 0.5f, 0.5f, 0.5f);
 	glUniform1f(matLocs.shininessLoc, 32.0f);
 
-	glActiveTexture(GL_TEXTURE0);
+	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, material->GetAlbedoTextureId());
 
-	glActiveTexture(GL_TEXTURE1);
+	glActiveTexture(GL_TEXTURE2);
 	glBindTexture(GL_TEXTURE_2D, material->GetNormalMapId());
 
-	glActiveTexture(GL_TEXTURE2);
+	glActiveTexture(GL_TEXTURE3);
 	glBindTexture(GL_TEXTURE_2D, material->GetRoughnessMapId());
 
-	glActiveTexture(GL_TEXTURE3);
+	glActiveTexture(GL_TEXTURE4);
 	glBindTexture(GL_TEXTURE_2D, material->GetMetalnessMapId());
 
 	glDrawElements(GL_TRIANGLES, model->indices.size(), GL_UNSIGNED_INT, 0);

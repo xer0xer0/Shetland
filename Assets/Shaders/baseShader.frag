@@ -34,6 +34,7 @@ uniform sampler2D albedoTex; // fix discrepancy between Material struct and thes
 uniform sampler2D normalMap;
 uniform sampler2D roughnessMap;
 uniform sampler2D metalnessMap;
+uniform samplerCube irradianceMap;
 uniform Light lights[NUM_LIGHTS];
 
 // assume surface reflection const is 0.04
@@ -129,6 +130,7 @@ void main()
 
     vec3 n = NormalsFromMap(normalTex);
     vec3 v = normalize(cameraPos - WorldPos);
+    vec3 irradiance = texture(irradianceMap, n).rgb;
 
     for(int i = 0; i < NUM_LIGHTS; i++)
     {
@@ -165,10 +167,14 @@ void main()
         
     }
 
-    vec3 ambient = vec3(0.03) * albedo;
+    vec3 ambientDiff = vec3(1.0) - FresnelSchlick(n, v, f0);
+    ambientDiff *= 1.0 - metalness;
+    vec3 irrDiff = irradiance * albedo;
+    vec3 ambient = ambientDiff * irrDiff;
+
     vec3 color = ambient + total;
     color = color / (color + vec3(1.0));
 
-    vec3 gamma = pow(total, vec3(1.0f / 2.2f));
+    vec3 gamma = pow(color, vec3(1.0f / 2.2f));
     FragColor = vec4(gamma, 1.0f);
 }

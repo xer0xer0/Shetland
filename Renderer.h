@@ -45,6 +45,7 @@ private:
 
 	std::shared_ptr<ShaderManager> shaderProgram;
 	std::shared_ptr<ShaderManager> skyShaderProgram;
+	std::shared_ptr<ShaderManager> irrMapShaderProgram;
 
 	std::shared_ptr<Model> cubeModel;
 	std::shared_ptr<Material> cobbleMat;
