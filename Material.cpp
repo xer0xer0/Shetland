@@ -14,21 +14,21 @@ Material::~Material()
 
 }
 
-void Material::SetTexture(std::string _path, TextureTypes _type)
+void Material::SetTexture(std::string _path, TextureTypes _type, GLenum _format)
 {
 	switch (_type)
 	{
 		case ALBEDO_MAT:
-			albedoTextureId = GenerateTexture(_path, GL_RGB);
+			albedoTextureId = GenerateTexture(_path, _format);
 			break;
 		case NORMAL_MAP:
-			normalMapId = GenerateTexture(_path, GL_RGB);
+			normalMapId = GenerateTexture(_path, _format);
 			break;
 		case ROUGHNESS_MAP:
-			roughnessMapId = GenerateTexture(_path, GL_RED);
+			roughnessMapId = GenerateTexture(_path, _format);
 			break;
 		case METALNESS_MAP:
-			metalnessMapId = GenerateTexture(_path, GL_RED);
+			metalnessMapId = GenerateTexture(_path, _format);
 			break;
 	}
 }

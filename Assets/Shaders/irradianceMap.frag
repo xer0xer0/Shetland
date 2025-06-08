@@ -44,5 +44,4 @@ void main()
 
     total = PI * total * (1.0f / float(numSamples));
     FragColor = vec4(total, 1.0f);
-  //  FragColor = texture(skybox, WorldPos);
 }

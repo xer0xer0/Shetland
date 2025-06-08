@@ -185,11 +185,16 @@
   <ItemGroup>
     <None Include="Assets\Shaders\baseShader.frag" />
     <None Include="Assets\Shaders\baseShader.vert" />
+    <None Include="Assets\Shaders\brdfMap.frag" />
+    <None Include="Assets\Shaders\brdfMap.vert" />
+    <None Include="Assets\Shaders\irradianceMap.frag" />
     <None Include="Assets\Shaders\skyShader.frag" />
     <None Include="Assets\Shaders\skyShader.vert" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Assets\Includes\DearImGui\LICENSE.txt" />
+    <Text Include="Assets\Shaders\cubemap.vert" />
+    <Text Include="Assets\Shaders\prefilterMap.frag" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

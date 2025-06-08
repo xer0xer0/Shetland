@@ -157,10 +157,25 @@
     <None Include="Assets\Shaders\skyShader.vert">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="Assets\Shaders\irradianceMap.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Assets\Shaders\brdfMap.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Assets\Shaders\brdfMap.vert">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Assets\Includes\DearImGui\LICENSE.txt">
       <Filter>DearImGui</Filter>
+    </Text>
+    <Text Include="Assets\Shaders\cubemap.vert">
+      <Filter>Shaders</Filter>
+    </Text>
+    <Text Include="Assets\Shaders\prefilterMap.frag">
+      <Filter>Shaders</Filter>
     </Text>
   </ItemGroup>
 </Project>

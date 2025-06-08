@@ -30,18 +30,23 @@ struct Material
 };
 
 uniform vec3 cameraPos;
+
+uniform samplerCube irradianceMap;
+uniform samplerCube prefilterMap;
+uniform sampler2D brdfMap;
+
 uniform sampler2D albedoTex; // fix discrepancy between Material struct and these
 uniform sampler2D normalMap;
 uniform sampler2D roughnessMap;
 uniform sampler2D metalnessMap;
-uniform samplerCube irradianceMap;
+
 uniform Light lights[NUM_LIGHTS];
 
 // assume surface reflection const is 0.04
 const float NON_METAL_COLOR = 0.04f;
 const float MIN_ROUGHNESS = 0.0000001f;
 const float PI = 3.14159265359f;
-
+const float MAX_REFLECTION_LOD = 4.0f;
 
 vec3 NormalsFromMap(vec3 _normalTex)
 {
@@ -86,18 +91,22 @@ float GeometrySmith(vec3 _n, vec3 _v, vec3 _l, float _roughness)
     return gs1 * gs2;
 }
 
-vec3 FresnelSchlick(vec3 _v, vec3 _h, vec3 _specColor)
+vec3 FresnelSchlick(float _cosT, vec3 _specColor)
 {
-    float VDotH = max(dot(_h, _v), 0.0);
+    return _specColor + (1.0 - _specColor) * pow(clamp(1.0 - _cosT, 0.0, 1.0), 5.0);
+}
 
-    return _specColor + (1.0 - _specColor) * pow(clamp(1.0 - VDotH, 0.0, 1.0), 5.0);
+vec3 FresnelSchlickRoughness(float _cosT, vec3 _specColor, float _roughness)
+{
+    vec3 r = max(vec3(1.0f - _roughness), _specColor);
+    return _specColor + (r - _specColor) * pow(clamp(1.0 - _cosT, 0.0, 1.0), 5.0);
 }
 
 // n - normal vector, v - vector to camera, l - vector to light
 vec3 CookTorrenceBRDF(vec3 _n, vec3 _v, vec3 _l, vec3 _h, float _roughness, vec3 _specColor)
 {
     float D = SpecDistribution(_n, _h, _roughness);
-    vec3 F = FresnelSchlick(_n, _h, _specColor);
+    vec3 F = FresnelSchlick(max(dot(_h, _v), 0.0f), _specColor);
     float G = GeometrySmith(_n, _v, _l, _roughness);
 
     vec3 num = D * F * G;
@@ -114,9 +123,32 @@ float Attenuate(Light _light)
     return atten;
 }
 
+vec3 AmbientColor(vec3 _albedo, vec3 _N, vec3 _V, vec3 _R, vec3 _specColor, float _roughness, float _metalness)
+{
+    vec3 ambient = vec3(0.0f);
+
+    float NDotV = max(dot(_N, _V), 0.0f);
+    vec3 F = FresnelSchlickRoughness(NDotV, _specColor, _roughness);
+    vec3 kSpec = F;
+    vec3 kDiff  = 1.0f - kSpec;
+    kDiff *= 1.0f - _metalness;
+
+    vec3 irradiance = texture(irradianceMap, _N).rgb;
+    vec3 diffuse = irradiance * _albedo;
+
+    // Split-Sum approximation
+    vec3 prefilteredColor = textureLod(prefilterMap, _R, _roughness * MAX_REFLECTION_LOD).rgb;
+    vec2 envBrdf = texture(brdfMap, vec2(NDotV, 0.0f), _roughness).rg;
+    vec3 specular = prefilteredColor * (F * envBrdf.x + envBrdf.y);
+
+    ambient = kDiff * diffuse * specular;
+
+    return ambient;
+}
+
 void main()
 {
-    vec3 total;
+    vec3 lighting;
     vec3 lightDir;
 
     vec3 albedo = texture(albedoTex, UV).rgb;
@@ -128,51 +160,48 @@ void main()
     vec3 nonMetal = vec3(NON_METAL_COLOR);
     vec3 f0 = mix(nonMetal, albedo, metalness);
 
-    vec3 n = NormalsFromMap(normalTex);
-    vec3 v = normalize(cameraPos - WorldPos);
-    vec3 irradiance = texture(irradianceMap, n).rgb;
+    vec3 N = NormalsFromMap(normalTex);
+    vec3 V = normalize(cameraPos - WorldPos);
+    vec3 R = reflect(-V, N);
 
     for(int i = 0; i < NUM_LIGHTS; i++)
     {
-        vec3 l;
-       // vec3 radiance = lights[i].diffuse * atten;
+        vec3 L;
 
         if(lights[i].type == LIGHT_TYPE_POINT)
         {
             
-            l = normalize(lights[i].position - WorldPos);
+            L = normalize(lights[i].position - WorldPos);
             
         }
         else if(lights[i].type == LIGHT_TYPE_DIRECTIONAL)
         {
-            l = normalize(-lights[i].direction);
+            L = normalize(-lights[i].direction);
         }
         
-        vec3 h = normalize(v + l);
-        vec3 specular = CookTorrenceBRDF(n, v, l, h, roughness, f0);
-        vec3 diffuse = vec3(1.0) - FresnelSchlick(n, h, f0);
+        vec3 H = normalize(V + L);
+
+        vec3 specular = CookTorrenceBRDF(N, V, L, H, roughness, f0);
+        vec3 diffuse = vec3(1.0) - FresnelSchlick(max(dot(H, V), 0.0f), f0);
         diffuse *= 1.0 - metalness;
-        float NDotL = max(dot(n, l), 0.0);
+        float NDotL = max(dot(N, L), 0.0);
 
         if(lights[i].type == LIGHT_TYPE_POINT)
         {
             
-            total += (diffuse * albedo / PI + specular) * NDotL * lights[i].color * Attenuate(lights[i]);
+            lighting += (diffuse * albedo / PI + specular) * NDotL * lights[i].color * Attenuate(lights[i]);
             
         }
         else if(lights[i].type == LIGHT_TYPE_DIRECTIONAL)
         {
-            total += (diffuse * albedo / PI + specular) * lights[i].color * NDotL;
+            lighting += (diffuse * albedo / PI + specular) * lights[i].color * NDotL;
         }
         
     }
 
-    vec3 ambientDiff = vec3(1.0) - FresnelSchlick(n, v, f0);
-    ambientDiff *= 1.0 - metalness;
-    vec3 irrDiff = irradiance * albedo;
-    vec3 ambient = ambientDiff * irrDiff;
+    vec3 ambient = AmbientColor(albedo, N, V, R, f0, roughness, metalness);
 
-    vec3 color = ambient + total;
+    vec3 color = ambient + lighting;
     color = color / (color + vec3(1.0));
 
     vec3 gamma = pow(color, vec3(1.0f / 2.2f));

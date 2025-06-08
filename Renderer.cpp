@@ -38,20 +38,27 @@ void Renderer::InitRenderer()
 
 	skyShaderProgram = std::make_shared<ShaderManager>("Assets/Shaders/skyShader.vert", "Assets/Shaders/skyShader.frag");
 	irrMapShaderProgram = std::make_shared<ShaderManager>("Assets/Shaders/cubemap.vert", "Assets/Shaders/irradianceMap.frag");
+	specPrefilterShaderProgram = std::make_shared<ShaderManager>("Assets/Shaders/cubemap.vert", "Assets/Shaders/prefilterMap.frag");
+	brdfMapShaderProgram = std::make_shared<ShaderManager>("Assets/Shaders/brdfMap.vert", "Assets/Shaders/brdfMap.frag");
 
 	cubeModel = std::make_shared<Model>("Assets/Models/cube.obj", vertexArray);
 
-	sky = std::make_shared<Sky>(cubeModel, skyShaderProgram->GetProgramId(), irrMapShaderProgram->GetProgramId(),
+	sky = std::make_shared<Sky>(cubeModel, skyShaderProgram->GetProgramId(),
+		irrMapShaderProgram->GetProgramId(), specPrefilterShaderProgram->GetProgramId(),
+		brdfMapShaderProgram->GetProgramId(),
 		"Assets/Skyboxes/Clouds Blue/right.png", "Assets/Skyboxes/Clouds Blue/left.png",
 		"Assets/Skyboxes/Clouds Blue/up.png", "Assets/Skyboxes/Clouds Blue/down.png",
 		"Assets/Skyboxes/Clouds Blue/front.png", "Assets/Skyboxes/Clouds Blue/back.png");
+	skyLocs.irradianceLoc = glGetUniformLocation(shaderProgram->GetProgramId(), "irradianceMap");
+	skyLocs.prefilterLoc = glGetUniformLocation(shaderProgram->GetProgramId(), "prefilterMap");
+	skyLocs.brdfLoc = glGetUniformLocation(shaderProgram->GetProgramId(), "brdfMap");
 
 	InitMaterials();
 	InitLights();
 	
 	objects = std::vector<Object>();
 	objects.push_back(Object(cubeModel, cobbleMat, lights));
-	objects.push_back(Object(cubeModel, cobbleMat, lights));
+	objects.push_back(Object(cubeModel, bronzeMat, lights));
 
 	objects[1].SetPosition(glm::vec3(-1.0f, 0.5f, -1.0f));
 }
@@ -71,10 +78,16 @@ void Renderer::InitImGui(GLFWwindow* _window)
 void Renderer::InitMaterials()
 {
 	cobbleMat = std::make_shared<Material>(shaderProgram);
-	cobbleMat->SetTexture("Assets/Materials/cobblestone_albedo.png", ALBEDO_MAT);
-	cobbleMat->SetTexture("Assets/Materials/cobblestone_normals.png", NORMAL_MAP);
+	cobbleMat->SetTexture("Assets/Materials/cobblestone_albedo.png", ALBEDO_MAT, GL_RGB); // bit depth = 24
+	cobbleMat->SetTexture("Assets/Materials/cobblestone_normals.png", NORMAL_MAP, GL_RGB);
 	cobbleMat->SetTexture("Assets/Materials/cobblestone_roughness.png", ROUGHNESS_MAP);
 	cobbleMat->SetTexture("Assets/Materials/cobblestone_metal.png", METALNESS_MAP);
+
+	bronzeMat = std::make_shared<Material>(shaderProgram);
+	bronzeMat->SetTexture("Assets/Materials/bronze_albedo.png", ALBEDO_MAT, GL_RGBA); // bit depth = 32
+	bronzeMat->SetTexture("Assets/Materials/bronze_normals.png", NORMAL_MAP, GL_RGBA);
+	bronzeMat->SetTexture("Assets/Materials/bronze_roughness.png", ROUGHNESS_MAP);
+	bronzeMat->SetTexture("Assets/Materials/bronze_metal.png", METALNESS_MAP);
 }
 
 void Renderer::InitLights()
@@ -190,8 +203,18 @@ void Renderer::Draw()
 
 	glUseProgram(shaderProgram->GetProgramId());
 	
+	glUniform1i(skyLocs.irradianceLoc, 0);
+	glUniform1i(skyLocs.prefilterLoc, 1);
+	glUniform1i(skyLocs.brdfLoc, 2);
+
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, sky->GetIrradianceMapId());
+
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, sky->GetPrefilterMapId());
+
+	glActiveTexture(GL_TEXTURE2);
+	glBindTexture(GL_TEXTURE_2D, sky->GetBrdfMapId());
 
 	for (int i = 0; i < lights.size(); i++)
 	{

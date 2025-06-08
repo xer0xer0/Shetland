@@ -52,6 +52,7 @@ bool Main::InitWindow()
 	}
 
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 	Camera::GetInstance().InitValues(windowWidth, windowHeight);
 	renderer->InitRenderer();
 	renderer->InitImGui(window);

@@ -38,6 +38,7 @@ private:
 	std::vector<LightLocations> lightLocs;
 
 	std::shared_ptr<Sky> sky;
+	SkyLocations skyLocs;
 
 	std::vector<Object> objects;
 	std::shared_ptr<Object> mainObj;
@@ -46,9 +47,12 @@ private:
 	std::shared_ptr<ShaderManager> shaderProgram;
 	std::shared_ptr<ShaderManager> skyShaderProgram;
 	std::shared_ptr<ShaderManager> irrMapShaderProgram;
+	std::shared_ptr<ShaderManager> specPrefilterShaderProgram;
+	std::shared_ptr<ShaderManager> brdfMapShaderProgram;
 
 	std::shared_ptr<Model> cubeModel;
 	std::shared_ptr<Material> cobbleMat;
+	std::shared_ptr<Material> bronzeMat;
 
 	int vertColorPos;
 	int strideMult = 8;
