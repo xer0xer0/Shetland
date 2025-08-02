@@ -9,6 +9,7 @@ class ShaderManager
 {
 public:
 	ShaderManager(std::string _vertexPath, std::string _fragmentPath);
+	~ShaderManager();
 
 	GLuint GetProgramId() { return programId; }
 	GLuint GetVertexShaderId() { return vertexId; }

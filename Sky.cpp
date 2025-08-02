@@ -12,6 +12,7 @@ Sky::Sky(std::shared_ptr<Model> _model, GLuint _shaderId, GLuint _irrMapShaderId
 	irrMapShaderId(_irrMapShaderId),
 	specPrefilterShaderId(_specPrefilterShaderId)
 {
+	std::cout << "Creating Skybox:" << std::endl;
 	std::vector<std::string> paths = { _right, _left, _top, _bottom, _front, _back };
 	cubemapId = CreateCubemap(paths);
 
@@ -36,16 +37,17 @@ GLuint Sky::CreateCubemap(std::vector<std::string> _paths)
 
 	for (int i = 0; i < _paths.size(); i++)
 	{
+		std::cout << " Loading skybox texture " << _paths[i] << std::endl;
 		unsigned char* imgData = stbi_load(_paths[i].c_str(), &width, &height, &numColorChannels, 0);
 
 		if (imgData)
 		{
 			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, imgData);
-			std::cout << "Loaded skybox texture at " << _paths[i] << std::endl;
+			std::cout << " Loaded skybox texture " << _paths[i] << std::endl;
 		}
 		else
 		{
-			std::cout << "Failed to load skybox texture at " << _paths[i] << std::endl;
+			std::cout << "Failed to load skybox texture " << _paths[i] << std::endl;
 		}
 
 		stbi_image_free(imgData);

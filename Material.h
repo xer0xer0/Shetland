@@ -37,6 +37,7 @@ public:
 	GLuint GetMetalnessMapId() { return metalnessMapId; }
 
 	void SetTexture(std::string _path, TextureTypes _type, GLenum _format = GL_RED);
+	void SetTexture(GLuint _textureID, TextureTypes _type);
 
 private:
 	GLuint GenerateTexture(std::string _path, GLenum _colorFormat);

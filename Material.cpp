@@ -33,6 +33,25 @@ void Material::SetTexture(std::string _path, TextureTypes _type, GLenum _format)
 	}
 }
 
+void Material::SetTexture(GLuint _textureID, TextureTypes _type)
+{
+	switch (_type)
+	{
+	case ALBEDO_MAT:
+		albedoTextureId = _textureID;
+		break;
+	case NORMAL_MAP:
+		normalMapId = _textureID;
+		break;
+	case ROUGHNESS_MAP:
+		roughnessMapId = _textureID;
+		break;
+	case METALNESS_MAP:
+		metalnessMapId = _textureID;
+		break;
+	}
+}
+
 GLuint Material::GenerateTexture(std::string _path, GLenum _colorFormat)
 {
 	GLuint id;

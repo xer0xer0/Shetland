@@ -15,7 +15,7 @@ Renderer::Renderer(int _windowWidth, int _windowHeight)
 	: windowWidth(_windowWidth),
 	windowHeight(_windowHeight)
 {
-	std::cout << "init renderer" << std::endl;
+	std::cout << "Initalizing Renderer..." << std::endl;
 }
 
 Renderer::~Renderer()
@@ -40,6 +40,7 @@ void Renderer::InitRenderer()
 	irrMapShaderProgram = std::make_shared<ShaderManager>("Assets/Shaders/cubemap.vert", "Assets/Shaders/irradianceMap.frag");
 	specPrefilterShaderProgram = std::make_shared<ShaderManager>("Assets/Shaders/cubemap.vert", "Assets/Shaders/prefilterMap.frag");
 	brdfMapShaderProgram = std::make_shared<ShaderManager>("Assets/Shaders/brdfMap.vert", "Assets/Shaders/brdfMap.frag");
+	computeShader = std::make_shared<ComputeShader>("Assets/Shaders/computeBase.comp");
 
 	cubeModel = std::make_shared<Model>("Assets/Models/cube.obj", vertexArray);
 
@@ -84,7 +85,8 @@ void Renderer::InitMaterials()
 	cobbleMat->SetTexture("Assets/Materials/cobblestone_metal.png", METALNESS_MAP);
 
 	bronzeMat = std::make_shared<Material>(shaderProgram);
-	bronzeMat->SetTexture("Assets/Materials/bronze_albedo.png", ALBEDO_MAT, GL_RGBA); // bit depth = 32
+	// bronzeMat->SetTexture("Assets/Materials/bronze_albedo.png", ALBEDO_MAT, GL_RGBA); // bit depth = 32
+	bronzeMat->SetTexture(computeShader->GetTextureId(), ALBEDO_MAT); // bit depth = 32
 	bronzeMat->SetTexture("Assets/Materials/bronze_normals.png", NORMAL_MAP, GL_RGBA);
 	bronzeMat->SetTexture("Assets/Materials/bronze_roughness.png", ROUGHNESS_MAP);
 	bronzeMat->SetTexture("Assets/Materials/bronze_metal.png", METALNESS_MAP);
@@ -201,6 +203,8 @@ void Renderer::Draw()
 
 	glBindVertexArray(vertexArray);
 
+	computeShader->RunShader();
+
 	glUseProgram(shaderProgram->GetProgramId());
 	
 	glUniform1i(skyLocs.irradianceLoc, 0);
@@ -226,7 +230,7 @@ void Renderer::Draw()
 
 	for (int i = 0; i < objects.size(); i++)
 	{
-		objects[i].RotateWorldMatrix((float)glfwGetTime() * glm::radians(10.0f), 0.5f, 1.0f, 0.0f);
+		// objects[i].RotateWorldMatrix((float)glfwGetTime() * glm::radians(10.0f), 0.5f, 1.0f, 0.0f);
 		objects[i].MoveWorldMatrix(objects[i].GetPosition().x, objects[i].GetPosition().y, objects[i].GetPosition().z);
 		objects[i].DrawObject();
 	}

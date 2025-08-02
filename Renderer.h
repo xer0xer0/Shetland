@@ -8,6 +8,7 @@
 #include <glm.hpp>
 
 #include "ShaderManager.h"
+#include "ComputeShader.h"
 #include "Material.h"
 #include "Object.h"
 #include "Sky.h"
@@ -49,6 +50,7 @@ private:
 	std::shared_ptr<ShaderManager> irrMapShaderProgram;
 	std::shared_ptr<ShaderManager> specPrefilterShaderProgram;
 	std::shared_ptr<ShaderManager> brdfMapShaderProgram;
+	std::shared_ptr<ComputeShader> computeShader;
 
 	std::shared_ptr<Model> cubeModel;
 	std::shared_ptr<Material> cobbleMat;

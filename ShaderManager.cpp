@@ -1,14 +1,18 @@
 #include "ShaderManager.h"
 
 #include <iostream>
-
-#include <iostream>
 #include <fstream>
 #include <sstream>
 
 ShaderManager::ShaderManager(std::string _vertexPath, std::string _fragmentPath)
 {
+	std::cout << "Creating shader program:" << std::endl;
 	CreateProgram(_vertexPath, _fragmentPath);
+}
+
+ShaderManager::~ShaderManager()
+{
+	glDeleteProgram(programId);
 }
 
 bool ShaderManager::CheckError(GLuint _shader)
@@ -63,12 +67,13 @@ GLuint ShaderManager::InitShader(GLenum _type, std::string _path)
 	glCompileShader(shaderId);
 
 	CheckError(shaderId);
+	std::cout << " Loaded shader " << _path << std::endl;
 	return shaderId;
 }
 
 std::string ShaderManager::ReadFromFile(std::string _path)
 {
-	std::cout << _path << std::endl;
+	std::cout << " Loading shader " << _path << std::endl;
 	std::string outText;
 	std::ifstream file;
 	file.exceptions(std::ifstream::failbit | std::ifstream::badbit);

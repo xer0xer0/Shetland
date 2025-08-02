@@ -6,9 +6,11 @@
 
 Model::Model(std::string _path, GLuint _vertexArray)
 {
+    std::cout << "Creating model:" << std::endl;
     if (LoadMesh(_path))
     {
         CreateVertexBuffer(_vertexArray);
+        std::cout << " Loaded model " << _path << std::endl;
     }
     else
     {
@@ -24,6 +26,7 @@ Model::~Model()
 
 bool Model::LoadMesh(std::string _path)
 {     
+    std::cout << " Loading model " << _path << std::endl;
     const aiScene* scene = importer.ReadFile(_path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
     
     if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)

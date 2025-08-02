@@ -1,0 +1,21 @@
+#version 430 core
+
+// local size = number of shader invocations in a work group
+// work group = collection of threads
+// using 1 shader invocation per pixel/1 pixel per work group
+layout (local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
+
+layout(rgba32f, binding = 0) uniform image2D imgOutput;
+
+void main()
+{
+	vec4 color = vec4(0.0f, 0.0f, 0.0f, 1.0f);
+	
+	// Use index of current work group item as tex coordinate
+	ivec2 uvCoord = ivec2(gl_GlobalInvocationID.xy);
+
+	color.x = float(uvCoord.x)/(gl_NumWorkGroups.x);
+    color.y = float(uvCoord.y)/(gl_NumWorkGroups.y);
+	
+    imageStore(imgOutput, uvCoord, color);
+}
