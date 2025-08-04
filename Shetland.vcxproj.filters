@@ -175,6 +175,7 @@
     <None Include="Assets\Shaders\computeBase.comp">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Assets\Includes\DearImGui\LICENSE.txt">

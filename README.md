@@ -9,7 +9,7 @@ Shetland named after the Shetland pony. It's my mini work horse- testy, will bit
 - [x] PBR
 - [x] Normal Mapping
 - [x] Skyboxes & IBL
-- [ ] 2D Compute Shader
+- [x] 2D Compute Shader
 - [ ] Sprites
 - [ ] 3D Compute Shader
 - [ ] Particle Simulation

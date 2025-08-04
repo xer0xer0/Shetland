@@ -76,12 +76,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Graphics Libs\glew-2.1.0\include;C:\Graphics Libs\glfw-3.3.8.bin.WIN64\include;C:\Graphics Libs\glm-master\glm;C:\Graphics Libs\AssimpInclude\include;C:\Graphics Libs\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\External\glew-2.1.0\include;$(ProjectDir)\External\glfw-3.3.8.bin.WIN64\include;$(ProjectDir)\External\glm;$(ProjectDir)\External\AssimpInclude\include;C:\Graphics Libs\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Graphics Libs\glew-2.1.0\bin\Release\x64;C:\Graphics Libs\glfw-3.3.8.bin.WIN64\lib-vc2022;C:\Graphics Libs\AssImp\build\lib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)\External\glew-2.1.0\bin\Release\x64;$(ProjectDir)\External\glfw-3.3.8.bin.WIN64\lib-vc2022;$(ProjectDir)\External\AssImp\build\lib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;glew32.lib;glfw3.lib;Assets\Includes\assimp-vc143-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -93,14 +93,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Graphics Libs\glew-2.1.0\include;C:\Graphics Libs\glfw-3.3.8.bin.WIN64\include;C:\Graphics Libs\glm-master\glm;C:\Graphics Libs\AssimpInclude\include;C:\Graphics Libs\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\External\glew-2.1.0\include;$(ProjectDir)\External\glfw-3.3.8.bin.WIN64\include;$(ProjectDir)\External\glm;$(ProjectDir)\External\AssimpInclude\include;C:\Graphics Libs\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Graphics Libs\glew-2.1.0\bin\Release\x64;C:\Graphics Libs\glfw-3.3.8.bin.WIN64\lib-vc2022;C:\Graphics Libs\AssImp\build\lib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)\External\glew-2.1.0\bin\Release\x64;$(ProjectDir)\External\glfw-3.3.8.bin.WIN64\lib-vc2022;$(ProjectDir)\External\AssImp\build\lib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;glew32.lib;glfw3.lib;Assets\Includes\assimp-vc143-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -110,12 +110,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Graphics Libs\glew-2.1.0\include;C:\Graphics Libs\glfw-3.3.8.bin.WIN64\include;C:\Graphics Libs\glm-master\glm;C:\Graphics Libs\AssimpInclude\include;C:\Graphics Libs\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\External\glew-2.1.0\include;$(ProjectDir)\External\glfw-3.3.8.bin.WIN64\include;$(ProjectDir)\External\glm;$(ProjectDir)\External\AssimpInclude\include;C:\Graphics Libs\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Graphics Libs\glew-2.1.0\bin\Release\x64;C:\Graphics Libs\glfw-3.3.8.bin.WIN64\lib-vc2022;C:\Graphics Libs\AssImp\build\lib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)\External\glew-2.1.0\bin\Release\x64;$(ProjectDir)\External\glfw-3.3.8.bin.WIN64\lib-vc2022;$(ProjectDir)\External\AssImp\build\lib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;glew32.lib;glfw3.lib;Assets\Includes\assimp-vc143-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -127,14 +127,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Graphics Libs\glew-2.1.0\include;C:\Graphics Libs\glfw-3.3.8.bin.WIN64\include;C:\Graphics Libs\glm-master\glm;C:\Graphics Libs\AssimpInclude\include;C:\Graphics Libs\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\External\glew-2.1.0\include;$(ProjectDir)\External\glfw-3.3.8.bin.WIN64\include;$(ProjectDir)\External\glm;$(ProjectDir)\External\AssimpInclude\include;C:\Graphics Libs\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Graphics Libs\glew-2.1.0\bin\Release\x64;C:\Graphics Libs\glfw-3.3.8.bin.WIN64\lib-vc2022;C:\Graphics Libs\AssImp\build\lib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)\External\glew-2.1.0\bin\Release\x64;$(ProjectDir)\External\glfw-3.3.8.bin.WIN64\lib-vc2022;$(ProjectDir)\External\AssImp\build\lib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;glew32.lib;glfw3.lib;Assets\Includes\assimp-vc143-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -193,6 +193,7 @@
     <None Include="Assets\Shaders\irradianceMap.frag" />
     <None Include="Assets\Shaders\skyShader.frag" />
     <None Include="Assets\Shaders\skyShader.vert" />
+    <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Assets\Includes\DearImGui\LICENSE.txt" />
