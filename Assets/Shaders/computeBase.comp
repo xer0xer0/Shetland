@@ -3,19 +3,61 @@
 // local size = number of shader invocations in a work group
 // work group = collection of threads
 // using 1 shader invocation per pixel/1 pixel per work group
-layout (local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
+layout (local_size_x = 8, local_size_y = 8, local_size_z = 1) in;
 
-layout(rgba32f, binding = 0) uniform image2D imgOutput;
+layout (rgba32f, binding = 0) uniform image2D imgOutput;
+
+layout (location = 0) uniform float time;
+
+const float RESOLUTION = 1024.0f;
+
+// Cellular algorithm taken from https://thebookofshaders.com/12/
+vec2 Random(vec2 _p)
+{
+	vec2 constX = vec2(127.1f, 311.7f);
+	vec2 constY = vec2(269.5f, 183.3f);
+
+	float x = dot(_p, constX);
+	float y = dot(_p, constY);
+
+	return fract(sin(vec2(x, y)) * 43758.5453f);
+}
+
+vec3 GetColor(vec2 _floorSt, vec2 _fractSt)
+{
+	vec3 color = vec3(0.0f);
+	float minDist = 1;
+
+	for(int y = -1; y <= 1; y++)
+	{
+		for(int x = -1; x <= 1; x++)
+		{
+			vec2 neighbor = vec2(float(x), float(y));
+
+			vec2 point = Random(_floorSt + neighbor);
+			point = 0.5f + 0.5f * sin(time + 6.2831f * point);
+			vec2 diff = neighbor + point - _fractSt;
+			
+			// Get minimum distance
+			float dist = length(diff);
+			minDist = min(minDist, dist);
+		}
+	}
+
+	color += vec3(minDist);
+	color += vec3(1.0f - step(0.02f, minDist));
+
+	return color;
+}
 
 void main()
 {
-	vec4 color = vec4(0.0f, 0.0f, 0.0f, 1.0f);
-	
 	// Use index of current work group item as tex coordinate
-	ivec2 uvCoord = ivec2(gl_GlobalInvocationID.xy);
-
-	color.x = float(uvCoord.x)/(gl_NumWorkGroups.x);
-    color.y = float(uvCoord.y)/(gl_NumWorkGroups.y);
+	vec2 st = ivec2(gl_GlobalInvocationID.xy) / vec2(RESOLUTION);\
+	st *= 5.0f;
+	vec3 color = GetColor(floor(st), fract(st));
 	
-    imageStore(imgOutput, uvCoord, color);
+	// invert colors
+	color = vec3(1.0f) - color;
+    imageStore(imgOutput, ivec2(gl_GlobalInvocationID.xy), vec4(color, 1.0f));
 }

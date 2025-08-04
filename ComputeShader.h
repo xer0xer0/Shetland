@@ -9,7 +9,7 @@ public:
 	ComputeShader(std::string _shaderPath);
 	~ComputeShader();
 
-	void RunShader();
+	void RunShader(float _time);
 	void InitOutputTexture(int _width, int _height);
 
 	GLuint GetProgramId() { return programId; }
@@ -24,6 +24,7 @@ private:
 
 	GLuint programId;
 	GLuint shaderId;
+	GLuint timeLoc;
 
 	GLuint textureId;
 	int textureWidth;

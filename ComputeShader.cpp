@@ -6,11 +6,11 @@
 
 ComputeShader::ComputeShader(std::string _shaderPath)
 	: textureId(-1),
-	textureWidth(512),
-	textureHeight(512)
+	textureWidth(1024),
+	textureHeight(1024)
 {
 	CreateProgram(_shaderPath);
-	InitOutputTexture(512, 512);
+	InitOutputTexture(textureWidth, textureHeight);
 }
 
 ComputeShader::~ComputeShader()
@@ -33,17 +33,19 @@ bool ComputeShader::CheckError(GLuint _shader)
 	return true;
 }
 
-void ComputeShader::RunShader()
+void ComputeShader::RunShader(float _time)
 {
 	if (textureId < 0)
 	{
 		throw std::exception("Error running compute shader - no texture created.");
 	}
 
+	// std::cout << _time << std::endl;
 	glUseProgram(programId);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, textureId);
-	glDispatchCompute((GLuint)textureWidth, (GLuint)textureHeight, 1);
+	glUniform1f(timeLoc, _time);
+	glDispatchCompute((GLuint)textureWidth / 8, (GLuint)textureHeight / 8, 1);
 	glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
 }
 
@@ -81,9 +83,11 @@ void ComputeShader::CreateProgram(std::string _shaderPath)
 		std::cout << "ERROR::SHADER_PROGRAM::COMPILATION_FAILED\n" << infoLog << std::endl;
 	}
 
+	timeLoc = glGetUniformLocation(programId, "time");
+
 	// Clean up shaders (already linked)
-	//glDetachShader(programId, shaderId);
-	//glDeleteShader(shaderId);
+	glDetachShader(programId, shaderId);
+	glDeleteShader(shaderId);
 }
 
 GLuint ComputeShader::InitShader(std::string _path)

@@ -150,6 +150,7 @@
     <ClInclude Include="Assets\Includes\DearImGui\imstb_truetype.h" />
     <ClInclude Include="Assets\Includes\stb_image.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="ComputeShader.h" />
     <ClInclude Include="Core.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="Main.h" />
@@ -171,6 +172,7 @@
     <ClCompile Include="Assets\Includes\DearImGui\imgui_tables.cpp" />
     <ClCompile Include="Assets\Includes\DearImGui\imgui_widgets.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="ComputeShader.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Material.cpp" />
@@ -187,6 +189,7 @@
     <None Include="Assets\Shaders\baseShader.vert" />
     <None Include="Assets\Shaders\brdfMap.frag" />
     <None Include="Assets\Shaders\brdfMap.vert" />
+    <None Include="Assets\Shaders\computeBase.comp" />
     <None Include="Assets\Shaders\irradianceMap.frag" />
     <None Include="Assets\Shaders\skyShader.frag" />
     <None Include="Assets\Shaders\skyShader.vert" />

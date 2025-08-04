@@ -87,6 +87,9 @@
     <ClInclude Include="STB.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ComputeShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -143,6 +146,9 @@
     <ClCompile Include="STB.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ComputeShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shaders\baseShader.frag">
@@ -164,6 +170,9 @@
       <Filter>Shaders</Filter>
     </None>
     <None Include="Assets\Shaders\brdfMap.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Assets\Shaders\computeBase.comp">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

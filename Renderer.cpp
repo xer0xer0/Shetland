@@ -81,12 +81,12 @@ void Renderer::InitMaterials()
 	cobbleMat = std::make_shared<Material>(shaderProgram);
 	cobbleMat->SetTexture("Assets/Materials/cobblestone_albedo.png", ALBEDO_MAT, GL_RGB); // bit depth = 24
 	cobbleMat->SetTexture("Assets/Materials/cobblestone_normals.png", NORMAL_MAP, GL_RGB);
-	cobbleMat->SetTexture("Assets/Materials/cobblestone_roughness.png", ROUGHNESS_MAP);
+//	cobbleMat->SetTexture("Assets/Materials/cobblestone_roughness.png", ROUGHNESS_MAP);
+	cobbleMat->SetTexture(computeShader->GetTextureId(), ROUGHNESS_MAP);
 	cobbleMat->SetTexture("Assets/Materials/cobblestone_metal.png", METALNESS_MAP);
 
 	bronzeMat = std::make_shared<Material>(shaderProgram);
-	// bronzeMat->SetTexture("Assets/Materials/bronze_albedo.png", ALBEDO_MAT, GL_RGBA); // bit depth = 32
-	bronzeMat->SetTexture(computeShader->GetTextureId(), ALBEDO_MAT); // bit depth = 32
+	bronzeMat->SetTexture("Assets/Materials/bronze_albedo.png", ALBEDO_MAT, GL_RGBA); // bit depth = 32
 	bronzeMat->SetTexture("Assets/Materials/bronze_normals.png", NORMAL_MAP, GL_RGBA);
 	bronzeMat->SetTexture("Assets/Materials/bronze_roughness.png", ROUGHNESS_MAP);
 	bronzeMat->SetTexture("Assets/Materials/bronze_metal.png", METALNESS_MAP);
@@ -203,7 +203,7 @@ void Renderer::Draw()
 
 	glBindVertexArray(vertexArray);
 
-	computeShader->RunShader();
+	computeShader->RunShader(glfwGetTime());
 
 	glUseProgram(shaderProgram->GetProgramId());
 	
