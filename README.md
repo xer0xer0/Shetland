@@ -14,3 +14,8 @@ Shetland named after the Shetland pony. It's my mini work horse- testy, will bit
 - [ ] 3D Compute Shader
 - [ ] Particle Simulation
 - [ ] Collision
+
+
+## Demo
+Video taken after commit 8c37e57
+<video src="https://github.com/user-attachments/assets/fe75696d-6318-4d75-843e-19b3d3330c58" width="100%" />
